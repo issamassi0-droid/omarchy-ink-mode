@@ -30,7 +30,7 @@ Optional Hyprland bind (add to `~/.config/hypr/bindings.lua`):
 o.bind(
   "SUPER + CTRL + SHIFT + N",
   "Cycle ink mode",
-  os.getenv("HOME") .. "/.config/omarchy/plugins/jinxnet.inkMode/cycle.sh"
+  os.getenv("HOME") .. "/.config/omarchy/plugins/jinxnet.inkmode/cycle.sh"
 )
 ```
 
@@ -39,12 +39,12 @@ o.bind(
 Switch to **Normal** first so the screen filter is cleared, then:
 
 ```bash
-omarchy plugin remove jinxnet.inkMode
+omarchy plugin remove jinxnet.inkmode
 ```
 
 That uninstalls the plugin and takes the chip off the bar. It does not edit a Hyprland bind you added by hand.
 
-Disabling without removing (`omarchy plugin disable jinxnet.inkMode`) leaves an active filter in place until you switch to Normal, or reload Hyprland with no shader set.
+Disabling without removing (`omarchy plugin disable jinxnet.inkmode`) leaves an active filter in place until you switch to Normal, or reload Hyprland with no shader set.
 
 Optional leftovers:
 
@@ -65,11 +65,11 @@ omarchy-shell inkMode refresh
 `cycle.sh` does the same from a script or keybind, including when IPC is down:
 
 ```bash
-~/.config/omarchy/plugins/jinxnet.inkMode/cycle.sh           # cycle
-~/.config/omarchy/plugins/jinxnet.inkMode/cycle.sh status    # live Hyprland shader
-~/.config/omarchy/plugins/jinxnet.inkMode/cycle.sh color-ink
-~/.config/omarchy/plugins/jinxnet.inkMode/cycle.sh ink
-~/.config/omarchy/plugins/jinxnet.inkMode/cycle.sh normal
+~/.config/omarchy/plugins/jinxnet.inkmode/cycle.sh           # cycle
+~/.config/omarchy/plugins/jinxnet.inkmode/cycle.sh status    # live Hyprland shader
+~/.config/omarchy/plugins/jinxnet.inkmode/cycle.sh color-ink
+~/.config/omarchy/plugins/jinxnet.inkmode/cycle.sh ink
+~/.config/omarchy/plugins/jinxnet.inkmode/cycle.sh normal
 ```
 
 ## Tweaking Color Ink
