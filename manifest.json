@@ -2,10 +2,10 @@
   "schemaVersion": 1,
   "id": "jinxnet.inkmode",
   "name": "Ink Mode",
-  "version": "1.2.1",
+  "version": "1.2.2",
   "author": "Brad Jinks",
   "license": "MIT",
-  "description": "Cycle the whole screen between Normal, Color Ink, and Ink modes. Remembers the last mode across login and theme changes.",
+  "description": "A print-like filter for the whole screen — good for books and graphic novels, long coding sessions, and night-time viewing. Color Ink keeps hue without the glow; Ink is warm grayscale. Last mode comes back after login and Style changes.",
   "homepage": "https://github.com/bradjinks/omarchy-ink-mode",
   "kinds": [
     "service",
@@ -17,7 +17,7 @@
   },
   "barWidget": {
     "displayName": "Ink Mode",
-    "description": "Cycle Normal, Color Ink, and Ink screen filters",
+    "description": "Print-like screen filter for reading, coding, and night viewing",
     "category": "Appearance",
     "aliases": [
       "ink",

@@ -46,7 +46,7 @@ write_desired() {
 set_shader() {
   hyprctl eval "hl.config({ [\"decoration.screen_shader\"] = \"$1\" })" >/dev/null
   # Shader changes can sit unseen until the next damaged frame (e.g. mouse move).
-  hyprctl dispatch forcerendererreload >/dev/null 2>&1 || true
+  hyprctl eval "hl.dsp.force_renderer_reload()" >/dev/null 2>&1 || true
 }
 
 notify() {

@@ -18,18 +18,29 @@ Item {
   }
 
   readonly property string cycleScript: root.pluginDir + "/cycle.sh"
+  onCycleScriptChanged: if (!root.stateLoaded) root.loadDesired()
 
   property string mode: "normal"
   property string desiredMode: "normal"
   property bool stateLoaded: false
   property bool applying: false
   property double lastApplyAt: 0
+  property int loadAttempts: 0
 
   readonly property int applyGraceMs: 1500
   readonly property int settleMs: 900
+  readonly property int maxLoadAttempts: 10
+
+  function loadDesired() {
+    if (desiredProbe.running)
+      return
+    if (!root.cycleScript || root.cycleScript.indexOf("/") !== 0)
+      return
+    desiredProbe.running = true
+  }
 
   function refresh() {
-    if (root.applying || statusProbe.running || desiredProbe.running)
+    if (root.applying || statusProbe.running || desiredProbe.running || diskProbe.running)
       return
     statusProbe.running = true
   }
@@ -77,9 +88,13 @@ Item {
       return
     }
 
-    // Hyprland reload (theme change, omarchy update) clears the shader.
-    // Wait until it stays cleared before putting the filter back.
-    settleTimer.restart()
+    // A keybind that calls cycle.sh updates the compositor and the state
+    // file without going through this service. Re-read the file before
+    // treating the mismatch as a Hyprland reload that should be reverted.
+    if (diskProbe.running)
+      return
+    diskProbe.pendingLive = live
+    diskProbe.running = true
   }
 
   Process {
@@ -88,7 +103,10 @@ Item {
     stdout: StdioCollector {
       waitForEnd: true
       onStreamFinished: {
-        var saved = InkModel.normalize(String(text).trim())
+        var raw = String(text).trim()
+        if (raw !== "normal" && raw !== "color-ink" && raw !== "ink")
+          return
+        var saved = InkModel.normalize(raw)
         root.desiredMode = saved
         root.mode = saved
         root.stateLoaded = true
@@ -99,10 +117,44 @@ Item {
       }
     }
     onExited: function(exitCode) {
-      if (exitCode !== 0) {
+      if (exitCode === 0 || root.stateLoaded)
+        return
+      root.loadAttempts += 1
+      if (root.loadAttempts >= root.maxLoadAttempts) {
         root.desiredMode = "normal"
         root.mode = "normal"
         root.stateLoaded = true
+        return
+      }
+      loadRetry.restart()
+    }
+  }
+
+  Process {
+    id: diskProbe
+    property string pendingLive: "normal"
+    command: [root.cycleScript, "desired"]
+    stdout: StdioCollector {
+      waitForEnd: true
+      onStreamFinished: {
+        var raw = String(text).trim()
+        if (raw !== "normal" && raw !== "color-ink" && raw !== "ink")
+          return
+        var saved = InkModel.normalize(raw)
+        var live = InkModel.normalize(diskProbe.pendingLive)
+        if (live === saved) {
+          root.desiredMode = saved
+          root.mode = saved
+          settleTimer.stop()
+          return
+        }
+        if (saved !== root.desiredMode) {
+          root.setMode(saved, true)
+          return
+        }
+        // Hyprland reload (theme change, omarchy update) clears the shader.
+        // Wait until it stays cleared before putting the filter back.
+        settleTimer.restart()
       }
     }
   }
@@ -168,7 +220,21 @@ Item {
     onTriggered: root.refresh()
   }
 
-  Component.onCompleted: desiredProbe.running = true
+  Timer {
+    id: loadRetry
+    interval: 400
+    repeat: false
+    onTriggered: root.loadDesired()
+  }
+
+  // ensureService injects `manifest` after createObject. Wait one tick so
+  // pluginDir is the real plugin path before the first desired-state probe.
+  Timer {
+    interval: 0
+    running: true
+    repeat: false
+    onTriggered: root.loadDesired()
+  }
 
   IpcHandler {
     target: "inkMode"

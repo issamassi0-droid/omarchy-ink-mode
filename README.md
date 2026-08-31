@@ -27,12 +27,10 @@ That puts a chip on the right of the bar. Click it to cycle **Normal → Color I
 Optional Hyprland bind (add to `~/.config/hypr/bindings.lua`):
 
 ```lua
-o.bind(
-  "SUPER + CTRL + SHIFT + N",
-  "Cycle ink mode",
-  os.getenv("HOME") .. "/.config/omarchy/plugins/jinxnet.inkmode/cycle.sh"
-)
+o.bind("SUPER + CTRL + SHIFT + N", "Cycle ink mode", "omarchy-shell inkMode cycle")
 ```
+
+That goes through the plugin service so the bar chip stays in sync after login. If the shell is not up yet, bind `cycle.sh` instead (same path as the CLI below).
 
 ## Remove
 
