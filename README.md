@@ -1,10 +1,12 @@
 # Ink Mode
 
-Most desktops are lit like a storefront. Fine for five minutes; rough for a day of reading and coding, when the editor is calm and every other window is still shouting.
+I tried a color e-ink reader once. Loved the muted palette. Did not love the price.
 
-Ink Mode puts a paper-like filter on the *whole* screen — terminals, browsers, video — not just the theme. **Color Ink** keeps hue but takes the neon out, the way a printed page holds color without glow. **Ink** goes further: warm grayscale, like newsprint. **Normal** is the unfiltered display, one click away when you need punch.
+That look is what I wanted for reading and coding: color, just quieter. Desktop themes get you most of the way there. Then you open a webpage or a YouTube tab and the difference is almost painful — calm editor, neon everything else.
 
-The point isn’t a gimmick. It’s to stay in one visual register so your eyes aren’t jumping between a quiet buffer and a loud web.
+So I wondered: what if the *whole* screen just got a little desaturated? Not another theme. A filter.
+
+**Color Ink** keeps hue but takes the punch out, the way print holds color without glow. **Ink** goes further: warm grayscale, like newsprint. **Normal** is the unfiltered display, one click away when you actually want the fireworks.
 
 An [Omarchy](https://omarchy.org) bar widget and service. Last mode is restored after login and after Style changes.
 
