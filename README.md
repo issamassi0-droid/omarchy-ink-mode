@@ -1,12 +1,12 @@
 # Ink Mode
 
-An [Omarchy](https://omarchy.org) bar widget that filters the whole screen — UI, browsers, and video — through Hyprland's compositor shader.
+An [Omarchy](https://omarchy.org) bar widget and service that filters the whole screen — UI, browsers, and video — through Hyprland's compositor shader. Last mode is restored after login and after Style changes.
 
 Three modes, one click:
 
 | Mode | Look |
 |---|---|
-| **Normal Mode** | Full saturation. Default after login or reload. |
+| **Normal Mode** | Full saturation. |
 | **Color Ink Mode** | Muted color, slightly warm whites. |
 | **Ink Mode** | Grayscale on warm gray paper. |
 
@@ -34,7 +34,7 @@ Edit `shaders/color-ink.frag` and change `SATURATION` (1.0 = unchanged, 0.0 = gr
 
 ## Notes
 
-- Login and `hyprctl reload` return to **Normal Mode**. The last choice is not saved.
+- The last mode is saved in `~/.local/state/omarchy/ink.mode` and restored on login, after Style changes, and after `hyprctl reload`.
 - Some exclusive-fullscreen games skip Hyprland and will not be filtered.
 - Switch to Normal Mode before disabling the plugin if you want the filter cleared immediately.
 

@@ -5,12 +5,14 @@ set -euo pipefail
 dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 color_ink="$dir/shaders/color-ink.frag"
 ink="$dir/shaders/ink.frag"
+state_dir="${XDG_STATE_HOME:-$HOME/.local/state}/omarchy"
+state_file="$state_dir/ink.mode"
 
 current() {
   hyprctl getoption decoration:screen_shader -j 2>/dev/null || true
 }
 
-mode_from_current() {
+mode_from_hypr() {
   local json="$1"
   if printf '%s' "$json" | grep -q 'color-ink.frag'; then
     printf 'color-ink'
@@ -23,6 +25,24 @@ mode_from_current() {
   fi
 }
 
+read_desired() {
+  if [[ -r $state_file ]]; then
+    local saved
+    saved=$(tr -d '[:space:]' <"$state_file")
+    case "$saved" in
+      normal|color-ink|ink) printf '%s' "$saved" ;;
+      *) printf 'normal' ;;
+    esac
+  else
+    printf 'normal'
+  fi
+}
+
+write_desired() {
+  mkdir -p "$state_dir"
+  printf '%s\n' "$1" >"$state_file"
+}
+
 set_shader() {
   hyprctl eval "hl.config({ [\"decoration.screen_shader\"] = \"$1\" })" >/dev/null
 }
@@ -31,42 +51,67 @@ notify() {
   omarchy notification send "$1" "$2" >/dev/null 2>&1 || true
 }
 
+quiet=false
+args=()
+for arg in "$@"; do
+  if [[ $arg == --quiet ]]; then
+    quiet=true
+  else
+    args+=("$arg")
+  fi
+done
+set -- "${args[@]+"${args[@]}"}"
+
 apply() {
   case "$1" in
     color-ink)
       set_shader "$color_ink"
-      notify "Color Ink Mode" "Muted color on the whole screen"
+      write_desired color-ink
+      [[ $quiet == true ]] || notify "Color Ink Mode" "Muted color on the whole screen"
       ;;
     ink)
       set_shader "$ink"
-      notify "Ink Mode" "Grayscale on warm paper"
+      write_desired ink
+      [[ $quiet == true ]] || notify "Ink Mode" "Grayscale on warm paper"
       ;;
     normal|*)
       set_shader ""
-      notify "Normal Mode" "Full saturation"
+      write_desired normal
+      [[ $quiet == true ]] || notify "Normal Mode" "Full saturation"
       ;;
   esac
 }
 
+next_mode() {
+  case "$1" in
+    normal) printf 'color-ink' ;;
+    color-ink) printf 'ink' ;;
+    *) printf 'normal' ;;
+  esac
+}
+
 cmd="${1:-cycle}"
-now="$(mode_from_current "$(current)")"
+live="$(mode_from_hypr "$(current)")"
+desired="$(read_desired)"
 
 case "$cmd" in
   status)
-    printf '%s\n' "$now"
+    printf '%s\n' "$live"
+    ;;
+  desired)
+    printf '%s\n' "$desired"
+    ;;
+  restore)
+    apply "$desired"
     ;;
   normal|color-ink|ink)
     apply "$cmd"
     ;;
   cycle)
-    case "$now" in
-      normal) apply color-ink ;;
-      color-ink) apply ink ;;
-      *) apply normal ;;
-    esac
+    apply "$(next_mode "$desired")"
     ;;
   *)
-    echo "Usage: cycle.sh [cycle|status|normal|color-ink|ink]" >&2
+    echo "Usage: cycle.sh [cycle|status|desired|restore|normal|color-ink|ink] [--quiet]" >&2
     exit 1
     ;;
 esac

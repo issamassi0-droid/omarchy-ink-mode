@@ -1,17 +1,23 @@
 import QtQuick
 import Quickshell.Io
 import qs.Ui
+import "InkModel.js" as InkModel
 
 BarWidget {
   id: root
   moduleName: "ink.mode"
 
-  property string mode: "normal"
+  readonly property var service: bar && bar.shell && typeof bar.shell.firstPartyServiceFor === "function"
+    ? bar.shell.firstPartyServiceFor("ink.mode")
+    : null
 
   readonly property string cycleScript: {
     var url = Qt.resolvedUrl("cycle.sh").toString()
     return decodeURIComponent(url.replace(/^file:\/\//, ""))
   }
+
+  property string fallbackMode: "normal"
+  readonly property string mode: service ? InkModel.normalize(service.mode) : fallbackMode
 
   readonly property string glyph: {
     if (mode === "color-ink") return "󰢵"
@@ -19,43 +25,42 @@ BarWidget {
     return "󰏘"
   }
 
-  readonly property string modeLabel: {
-    if (mode === "color-ink") return "Color Ink Mode"
-    if (mode === "ink") return "Ink Mode"
-    return "Normal Mode"
-  }
-
   implicitWidth: button.implicitWidth
   implicitHeight: button.implicitHeight
 
-  function refresh() {
-    if (!statusProc.running)
-      statusProc.running = true
-  }
-
   function cycle() {
+    if (service && typeof service.cycle === "function") {
+      service.cycle()
+      return
+    }
     if (!cycleProc.running)
       cycleProc.running = true
   }
 
-  Component.onCompleted: refresh()
+  function refreshFallback() {
+    if (!statusProc.running)
+      statusProc.running = true
+  }
+
+  Component.onCompleted: {
+    if (!service)
+      refreshFallback()
+  }
 
   Timer {
     interval: 1500
-    running: true
+    running: root.service === null
     repeat: true
-    onTriggered: root.refresh()
+    onTriggered: root.refreshFallback()
   }
 
   Process {
     id: statusProc
-    command: [root.cycleScript, "status"]
+    command: [root.cycleScript, "desired"]
     stdout: StdioCollector {
       waitForEnd: true
       onStreamFinished: {
-        var next = String(text).trim()
-        if (next === "normal" || next === "color-ink" || next === "ink")
-          root.mode = next
+        root.fallbackMode = InkModel.normalize(String(text).trim())
       }
     }
   }
@@ -63,7 +68,7 @@ BarWidget {
   Process {
     id: cycleProc
     command: [root.cycleScript, "cycle"]
-    onExited: root.refresh()
+    onExited: root.refreshFallback()
   }
 
   BarIconButton {
@@ -72,7 +77,7 @@ BarWidget {
     bar: root.bar
     text: root.glyph
     active: root.mode !== "normal"
-    tooltipText: root.modeLabel + " — click to cycle"
+    tooltipText: InkModel.label(root.mode) + " — click to cycle"
     onPressed: function() { root.cycle() }
   }
 }

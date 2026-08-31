@@ -2,15 +2,17 @@
   "schemaVersion": 1,
   "id": "ink.mode",
   "name": "Ink Mode",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "author": "Brad Jinks",
   "license": "MIT",
-  "description": "Cycle the whole screen between Normal, Color Ink, and Ink modes. Compositor-wide, including video.",
+  "description": "Cycle the whole screen between Normal, Color Ink, and Ink modes. Remembers the last mode across login and theme changes.",
   "homepage": "https://github.com/bradjinks/omarchy-ink-mode",
   "kinds": [
+    "service",
     "bar-widget"
   ],
   "entryPoints": {
+    "service": "Service.qml",
     "barWidget": "BarWidget.qml"
   },
   "barWidget": {
