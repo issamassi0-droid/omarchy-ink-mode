@@ -22,7 +22,7 @@ An [Omarchy](https://omarchy.org) bar widget and service. Last mode is restored 
 omarchy plugin add https://github.com/bradjinks/omarchy-ink-mode.git --enable
 ```
 
-That puts a chip on the right of the bar. Click it to cycle **Normal → Color Ink → Ink → Normal**.
+That puts a chip on the right of the bar. Click it to cycle **Normal → Color Ink → Ink → Normal**. No extra packages: it uses Hyprland’s screen shader, which Omarchy already has.
 
 Optional Hyprland bind (add to `~/.config/hypr/bindings.lua`):
 
@@ -33,6 +33,23 @@ o.bind(
   os.getenv("HOME") .. "/.config/omarchy/plugins/jinxnet.inkMode/cycle.sh"
 )
 ```
+
+## Remove
+
+Switch to **Normal** first so the screen filter is cleared, then:
+
+```bash
+omarchy plugin remove jinxnet.inkMode
+```
+
+That uninstalls the plugin and takes the chip off the bar. It does not edit a Hyprland bind you added by hand.
+
+Disabling without removing (`omarchy plugin disable jinxnet.inkMode`) leaves an active filter in place until you switch to Normal, or reload Hyprland with no shader set.
+
+Optional leftovers:
+
+- `~/.local/state/omarchy/inkMode` — last saved mode
+- the optional bind in `~/.config/hypr/bindings.lua`
 
 ## CLI
 
