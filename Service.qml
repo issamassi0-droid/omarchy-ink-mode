@@ -1,5 +1,6 @@
 import QtQuick
 import Quickshell
+import Quickshell.Hyprland
 import Quickshell.Io
 import "InkModel.js" as InkModel
 
@@ -67,7 +68,7 @@ Item {
   }
 
   function considerLive(live) {
-    if (!root.stateLoaded || root.applying || root.inApplyGrace())
+    if (!root.stateLoaded || root.applying)
       return
 
     if (live === root.desiredMode) {
@@ -76,8 +77,8 @@ Item {
       return
     }
 
-    // Hyprland reload (theme change) clears the shader. Wait until it
-    // stays cleared before putting the filter back, or eval fights reload.
+    // Hyprland reload (theme change, omarchy update) clears the shader.
+    // Wait until it stays cleared before putting the filter back.
     settleTimer.restart()
   }
 
@@ -138,11 +139,25 @@ Item {
     interval: root.settleMs
     repeat: false
     onTriggered: {
-      if (root.applying || root.inApplyGrace())
+      if (root.applying)
         return
       if (root.desiredMode === "normal")
         return
+      if (root.inApplyGrace()) {
+        restart()
+        return
+      }
       root.runApply(root.desiredMode, true)
+    }
+  }
+
+  Connections {
+    target: Hyprland
+    function onRawEvent(event) {
+      if (!event || !event.name)
+        return
+      if (String(event.name) === "configreloaded")
+        root.refresh()
     }
   }
 
