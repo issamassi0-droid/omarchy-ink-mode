@@ -1,9 +1,10 @@
 #!/bin/bash
-# Cycle compositor ink modes: Normal → Color Ink → Ink → Normal.
+# Cycle compositor ink modes: Normal → Lighten → Color Ink → Ink → Normal.
 set -euo pipefail
 
 dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 color_ink="$dir/shaders/color-ink.frag"
+lighten="$dir/shaders/lighten.frag"
 ink="$dir/shaders/ink.frag"
 state_dir="${XDG_STATE_HOME:-$HOME/.local/state}/omarchy"
 state_file="$state_dir/inkMode"
@@ -16,6 +17,8 @@ mode_from_hypr() {
   local json="$1"
   if printf '%s' "$json" | grep -q 'color-ink.frag'; then
     printf 'color-ink'
+  elif printf '%s' "$json" | grep -q 'lighten.frag'; then
+    printf 'lighten'
   elif printf '%s' "$json" | grep -q '/ink.frag'; then
     printf 'ink'
   elif printf '%s' "$json" | grep -q 'ink.frag'; then
@@ -30,7 +33,7 @@ read_desired() {
     local saved
     saved=$(tr -d '[:space:]' <"$state_file")
     case "$saved" in
-      normal|color-ink|ink) printf '%s' "$saved" ;;
+      normal|color-ink|ink|lighten) printf '%s' "$saved" ;;
       *) printf 'normal' ;;
     esac
   else
@@ -71,6 +74,11 @@ apply() {
       write_desired color-ink
       [[ $quiet == true ]] || notify "Color Ink" "Soft, print-like color"
       ;;
+    lighten)
+      set_shader "$lighten"
+      write_desired lighten
+      [[ $quiet == true ]] || notify "Lighten" "Subtly muted color"
+      ;;
     ink)
       set_shader "$ink"
       write_desired ink
@@ -86,7 +94,8 @@ apply() {
 
 next_mode() {
   case "$1" in
-    normal) printf 'color-ink' ;;
+    normal) printf 'lighten' ;;
+    lighten) printf 'color-ink' ;;
     color-ink) printf 'ink' ;;
     *) printf 'normal' ;;
   esac
@@ -106,14 +115,14 @@ case "$cmd" in
   restore)
     apply "$desired"
     ;;
-  normal|color-ink|ink)
+  normal|lighten|color-ink|ink)
     apply "$cmd"
     ;;
   cycle)
     apply "$(next_mode "$desired")"
     ;;
   *)
-    echo "Usage: cycle.sh [cycle|status|desired|restore|normal|color-ink|ink] [--quiet]" >&2
+    echo "Usage: cycle.sh [cycle|status|desired|restore|normal|lighten|color-ink|ink] [--quiet]" >&2
     exit 1
     ;;
 esac

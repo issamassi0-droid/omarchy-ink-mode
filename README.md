@@ -6,13 +6,14 @@ That look is what I wanted for reading and coding: color, just quieter. Desktop 
 
 So I wondered: what if the *whole* screen just got a little desaturated? Not another theme. A filter.
 
-**Color Ink** keeps hue but takes the punch out, the way print holds color without glow. **Ink** goes further: warm grayscale, like newsprint. **Normal** is the unfiltered display, one click away when you actually want the fireworks.
+**Lighten** is subtly muted color, closer to normal but less vibrant. **Color Ink** keeps hue but takes the punch out, the way print holds color without glow. **Ink** goes further: warm grayscale, like newsprint. **Normal** is the unfiltered display, one click away when you actually want the fireworks.
 
 An [Omarchy](https://omarchy.org) bar widget and service. Last mode is restored after login and after Style changes.
 
 | Mode | Look |
 |---|---|
 | **Normal** | Unfiltered color |
+| **Lighten** | Subtly muted color |
 | **Color Ink** | Soft, print-like color |
 | **Ink** | Warm grayscale, like newsprint |
 
@@ -22,7 +23,7 @@ An [Omarchy](https://omarchy.org) bar widget and service. Last mode is restored 
 omarchy plugin add https://github.com/bradjinks/omarchy-ink-mode.git --enable
 ```
 
-That puts a chip on the right of the bar. Click it to cycle **Normal → Color Ink → Ink → Normal**. No extra packages: it uses Hyprland’s screen shader, which Omarchy already has.
+That puts a chip on the right of the bar. Click it to cycle **Normal → Lighten → Color Ink → Ink → Normal**. No extra packages: it uses Hyprland’s screen shader, which Omarchy already has.
 
 Optional Hyprland bind (add to `~/.config/hypr/bindings.lua`):
 
@@ -55,8 +56,8 @@ The plugin needs to be enabled and `omarchy-shell` running.
 
 ```bash
 omarchy-shell inkMode status          # {"mode":"color-ink","desired":"color-ink"}
-omarchy-shell inkMode cycle           # Normal → Color Ink → Ink → Normal
-omarchy-shell inkMode set color-ink   # or: ink  /  normal
+omarchy-shell inkMode cycle           # Normal → Lighten → Color Ink → Ink → Normal
+omarchy-shell inkMode set color-ink   # or: lighten / ink / normal
 omarchy-shell inkMode refresh
 ```
 
@@ -66,6 +67,7 @@ omarchy-shell inkMode refresh
 ~/.config/omarchy/plugins/jinxnet.inkmode/cycle.sh           # cycle
 ~/.config/omarchy/plugins/jinxnet.inkmode/cycle.sh status    # live Hyprland shader
 ~/.config/omarchy/plugins/jinxnet.inkmode/cycle.sh color-ink
+~/.config/omarchy/plugins/jinxnet.inkmode/cycle.sh lighten
 ~/.config/omarchy/plugins/jinxnet.inkmode/cycle.sh ink
 ~/.config/omarchy/plugins/jinxnet.inkmode/cycle.sh normal
 ```
