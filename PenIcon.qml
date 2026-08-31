@@ -26,10 +26,10 @@ Item {
   Rectangle {
     visible: root.slashed
     anchors.centerIn: parent
-    width: parent.width * 1.18
-    height: Math.max(2, parent.height * 0.13)
+    width: parent.width * 1.22
+    height: Math.max(2, parent.height * 0.14)
     radius: height / 2
     color: root.color
-    rotation: 45
+    rotation: -135
   }
 }
