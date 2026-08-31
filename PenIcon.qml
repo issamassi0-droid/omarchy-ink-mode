@@ -30,6 +30,6 @@ Item {
     height: Math.max(2, parent.height * 0.13)
     radius: height / 2
     color: root.color
-    rotation: -45
+    rotation: 45
   }
 }
