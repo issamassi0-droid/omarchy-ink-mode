@@ -17,21 +17,20 @@ Item {
   }
 
   readonly property string cycleScript: root.pluginDir + "/cycle.sh"
-  readonly property string statePath: {
-    var home = Quickshell.env("HOME") || ""
-    var xdg = Quickshell.env("XDG_STATE_HOME")
-    var base = (xdg && xdg.length) ? xdg : (home + "/.local/state")
-    return base + "/omarchy/inkMode"
-  }
 
   property string mode: "normal"
   property string desiredMode: "normal"
   property bool stateLoaded: false
-  property bool restorePending: false
+  property bool applying: false
+  property double lastApplyAt: 0
+
+  readonly property int applyGraceMs: 1500
+  readonly property int settleMs: 900
 
   function refresh() {
-    if (!statusProbe.running)
-      statusProbe.running = true
+    if (root.applying || statusProbe.running || desiredProbe.running)
+      return
+    statusProbe.running = true
   }
 
   function cycle() {
@@ -43,18 +42,19 @@ Item {
     root.desiredMode = next
     root.mode = next
     root.stateLoaded = true
+    settleTimer.stop()
     runApply(next, quiet === true)
-  }
-
-  function restore() {
-    setMode(root.desiredMode, true)
   }
 
   function runApply(mode, quiet) {
     if (applyProcess.running) {
-      root.restorePending = true
+      applyProcess.pendingMode = mode
+      applyProcess.pendingQuiet = quiet
+      applyProcess.hasPending = true
       return
     }
+    root.applying = true
+    root.lastApplyAt = Date.now()
     var args = [root.cycleScript, mode]
     if (quiet)
       args.push("--quiet")
@@ -62,14 +62,24 @@ Item {
     applyProcess.running = true
   }
 
-  function syncFromDiskThenRestore(live) {
-    if (desiredProbe.running)
-      return
-    pendingLive = live
-    desiredProbe.running = true
+  function inApplyGrace() {
+    return (Date.now() - root.lastApplyAt) < root.applyGraceMs
   }
 
-  property string pendingLive: ""
+  function considerLive(live) {
+    if (!root.stateLoaded || root.applying || root.inApplyGrace())
+      return
+
+    if (live === root.desiredMode) {
+      root.mode = live
+      settleTimer.stop()
+      return
+    }
+
+    // Hyprland reload (theme change) clears the shader. Wait until it
+    // stays cleared before putting the filter back, or eval fights reload.
+    settleTimer.restart()
+  }
 
   Process {
     id: desiredProbe
@@ -79,17 +89,12 @@ Item {
       onStreamFinished: {
         var saved = InkModel.normalize(String(text).trim())
         root.desiredMode = saved
+        root.mode = saved
         root.stateLoaded = true
-        if (root.pendingLive !== "") {
-          var live = root.pendingLive
-          root.pendingLive = ""
-          if (live !== saved)
-            root.restore()
-          else
-            root.mode = live
-        } else if (saved !== "normal" || root.mode !== saved) {
-          root.restore()
-        }
+        if (saved !== "normal")
+          root.runApply(saved, true)
+        else
+          root.refresh()
       }
     }
     onExited: function(exitCode) {
@@ -97,7 +102,6 @@ Item {
         root.desiredMode = "normal"
         root.mode = "normal"
         root.stateLoaded = true
-        root.pendingLive = ""
       }
     }
   }
@@ -108,26 +112,42 @@ Item {
     stdout: StdioCollector {
       waitForEnd: true
       onStreamFinished: {
-        var live = InkModel.normalize(String(text).trim())
-        root.syncFromDiskThenRestore(live)
+        root.considerLive(InkModel.normalize(String(text).trim()))
       }
     }
   }
 
   Process {
     id: applyProcess
+    property bool hasPending: false
+    property string pendingMode: "normal"
+    property bool pendingQuiet: true
+
     onExited: function() {
-      if (root.restorePending) {
-        root.restorePending = false
-        root.restore()
-        return
+      root.applying = false
+      root.lastApplyAt = Date.now()
+      if (applyProcess.hasPending) {
+        applyProcess.hasPending = false
+        root.runApply(applyProcess.pendingMode, applyProcess.pendingQuiet)
       }
-      root.refresh()
     }
   }
 
   Timer {
-    interval: 1000
+    id: settleTimer
+    interval: root.settleMs
+    repeat: false
+    onTriggered: {
+      if (root.applying || root.inApplyGrace())
+        return
+      if (root.desiredMode === "normal")
+        return
+      root.runApply(root.desiredMode, true)
+    }
+  }
+
+  Timer {
+    interval: 2000
     running: true
     repeat: true
     onTriggered: root.refresh()
