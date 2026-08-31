@@ -22,7 +22,7 @@ BarWidget {
 
   readonly property color penColor: {
     if (mode === "color-ink")
-      return bar && bar.urgent ? bar.urgent : Color.urgent
+      return Color.urgent
     if (mode === "normal")
       return Qt.darker(bar && bar.barForeground ? bar.barForeground : Color.foreground, 1.35)
     return bar && bar.barForeground ? bar.barForeground : Color.foreground
