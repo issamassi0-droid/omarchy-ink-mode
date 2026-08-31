@@ -17,7 +17,7 @@ Item {
 
   OpticalGlyph {
     anchors.fill: parent
-    text: "󰏕"
+    text: "󰏪"
     fontFamily: root.fontFamily
     fontSize: Style.bar.iconFont
     color: root.color
