@@ -28,6 +28,27 @@ o.bind(
 )
 ```
 
+## CLI
+
+The plugin needs to be enabled and `omarchy-shell` running.
+
+```bash
+omarchy-shell inkMode status          # {"mode":"color-ink","desired":"color-ink"}
+omarchy-shell inkMode cycle           # Normal → Color Ink → Ink → Normal
+omarchy-shell inkMode set color-ink   # or: ink  /  normal
+omarchy-shell inkMode refresh
+```
+
+`cycle.sh` does the same from a script or keybind, including when IPC is down:
+
+```bash
+~/.config/omarchy/plugins/ink.mode/cycle.sh           # cycle
+~/.config/omarchy/plugins/ink.mode/cycle.sh status    # live Hyprland shader
+~/.config/omarchy/plugins/ink.mode/cycle.sh color-ink
+~/.config/omarchy/plugins/ink.mode/cycle.sh ink
+~/.config/omarchy/plugins/ink.mode/cycle.sh normal
+```
+
 ## Tweaking Color Ink
 
 Edit `shaders/color-ink.frag` and change `SATURATION` (1.0 = unchanged, 0.0 = grayscale). Then cycle away from Color Ink and back, or reload Hyprland.
