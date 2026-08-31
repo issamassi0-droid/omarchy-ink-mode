@@ -77,7 +77,7 @@ BarWidget {
     bar: root.bar
     text: root.glyph
     active: root.mode !== "normal"
-    tooltipText: InkModel.label(root.mode) + " — click to cycle"
+    tooltipText: InkModel.label(root.mode) + " — " + InkModel.description(root.mode)
     onPressed: function() { root.cycle() }
   }
 }

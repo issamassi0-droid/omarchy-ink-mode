@@ -1,14 +1,18 @@
 # Ink Mode
 
-An [Omarchy](https://omarchy.org) bar widget and service that filters the whole screen — UI, browsers, and video — through Hyprland's compositor shader. Last mode is restored after login and after Style changes.
+Most desktops are lit like a storefront. Fine for five minutes; rough for a day of reading and coding, when the editor is calm and every other window is still shouting.
 
-Three modes, one click:
+Ink Mode puts a paper-like filter on the *whole* screen — terminals, browsers, video — not just the theme. **Color Ink** keeps hue but takes the neon out, the way a printed page holds color without glow. **Ink** goes further: warm grayscale, like newsprint. **Normal** is the unfiltered display, one click away when you need punch.
+
+The point isn’t a gimmick. It’s to stay in one visual register so your eyes aren’t jumping between a quiet buffer and a loud web.
+
+An [Omarchy](https://omarchy.org) bar widget and service. Last mode is restored after login and after Style changes.
 
 | Mode | Look |
 |---|---|
-| **Normal Mode** | Full saturation. |
-| **Color Ink Mode** | Muted color, slightly warm whites. |
-| **Ink Mode** | Grayscale on warm gray paper. |
+| **Normal** | Unfiltered color |
+| **Color Ink** | Soft, print-like color |
+| **Ink** | Warm grayscale, like newsprint |
 
 ## Install
 
@@ -57,7 +61,7 @@ Edit `shaders/color-ink.frag` and change `SATURATION` (1.0 = unchanged, 0.0 = gr
 
 - The last mode is saved in `~/.local/state/omarchy/ink.mode` and restored on login, after Style changes, and after `hyprctl reload`.
 - Some exclusive-fullscreen games skip Hyprland and will not be filtered.
-- Switch to Normal Mode before disabling the plugin if you want the filter cleared immediately.
+- Switch to Normal before disabling the plugin if you want the filter cleared immediately.
 
 ## License
 

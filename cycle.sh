@@ -67,17 +67,17 @@ apply() {
     color-ink)
       set_shader "$color_ink"
       write_desired color-ink
-      [[ $quiet == true ]] || notify "Color Ink Mode" "Muted color on the whole screen"
+      [[ $quiet == true ]] || notify "Color Ink" "Soft, print-like color"
       ;;
     ink)
       set_shader "$ink"
       write_desired ink
-      [[ $quiet == true ]] || notify "Ink Mode" "Grayscale on warm paper"
+      [[ $quiet == true ]] || notify "Ink" "Warm grayscale, like newsprint"
       ;;
     normal|*)
       set_shader ""
       write_desired normal
-      [[ $quiet == true ]] || notify "Normal Mode" "Full saturation"
+      [[ $quiet == true ]] || notify "Normal" "Unfiltered color"
       ;;
   esac
 }

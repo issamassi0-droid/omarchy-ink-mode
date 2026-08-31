@@ -17,9 +17,15 @@ function nextMode(mode) {
 }
 
 function label(mode) {
-  if (mode === "color-ink") return "Color Ink Mode"
-  if (mode === "ink") return "Ink Mode"
-  return "Normal Mode"
+  if (mode === "color-ink") return "Color Ink"
+  if (mode === "ink") return "Ink"
+  return "Normal"
+}
+
+function description(mode) {
+  if (mode === "color-ink") return "Soft, print-like color"
+  if (mode === "ink") return "Warm grayscale, like newsprint"
+  return "Unfiltered color"
 }
 
 if (typeof module !== "undefined") {
@@ -27,6 +33,7 @@ if (typeof module !== "undefined") {
     normalize: normalize,
     fromHyprctl: fromHyprctl,
     nextMode: nextMode,
-    label: label
+    label: label,
+    description: description
   }
 }
