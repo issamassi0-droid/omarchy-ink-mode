@@ -20,9 +20,9 @@ BarWidget {
   readonly property string mode: service ? InkModel.normalize(service.mode) : fallbackMode
 
   readonly property string glyph: {
-    if (mode === "color-ink") return "󰢵"
-    if (mode === "ink") return "󰏪"
-    return "󰏘"
+    if (mode === "color-ink") return "󰏕" // md-pen
+    if (mode === "ink") return "󰏪" // md-fountain-pen
+    return "󱙯" // md-pen-off
   }
 
   implicitWidth: button.implicitWidth
