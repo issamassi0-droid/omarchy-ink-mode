@@ -28,7 +28,7 @@ Optional Hyprland bind (add to `~/.config/hypr/bindings.lua`):
 o.bind(
   "SUPER + CTRL + SHIFT + N",
   "Cycle ink mode",
-  os.getenv("HOME") .. "/.config/omarchy/plugins/ink.mode/cycle.sh"
+  os.getenv("HOME") .. "/.config/omarchy/plugins/jinxnet.inkMode/cycle.sh"
 )
 ```
 
@@ -46,11 +46,11 @@ omarchy-shell inkMode refresh
 `cycle.sh` does the same from a script or keybind, including when IPC is down:
 
 ```bash
-~/.config/omarchy/plugins/ink.mode/cycle.sh           # cycle
-~/.config/omarchy/plugins/ink.mode/cycle.sh status    # live Hyprland shader
-~/.config/omarchy/plugins/ink.mode/cycle.sh color-ink
-~/.config/omarchy/plugins/ink.mode/cycle.sh ink
-~/.config/omarchy/plugins/ink.mode/cycle.sh normal
+~/.config/omarchy/plugins/jinxnet.inkMode/cycle.sh           # cycle
+~/.config/omarchy/plugins/jinxnet.inkMode/cycle.sh status    # live Hyprland shader
+~/.config/omarchy/plugins/jinxnet.inkMode/cycle.sh color-ink
+~/.config/omarchy/plugins/jinxnet.inkMode/cycle.sh ink
+~/.config/omarchy/plugins/jinxnet.inkMode/cycle.sh normal
 ```
 
 ## Tweaking Color Ink
@@ -59,7 +59,7 @@ Edit `shaders/color-ink.frag` and change `SATURATION` (1.0 = unchanged, 0.0 = gr
 
 ## Notes
 
-- The last mode is saved in `~/.local/state/omarchy/ink.mode` and restored on login, after Style changes, and after `hyprctl reload`.
+- The last mode is saved in `~/.local/state/omarchy/inkMode` and restored on login, after Style changes, and after `hyprctl reload`.
 - Some exclusive-fullscreen games skip Hyprland and will not be filtered.
 - Switch to Normal before disabling the plugin if you want the filter cleared immediately.
 

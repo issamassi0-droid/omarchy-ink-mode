@@ -21,7 +21,7 @@ Item {
     var home = Quickshell.env("HOME") || ""
     var xdg = Quickshell.env("XDG_STATE_HOME")
     var base = (xdg && xdg.length) ? xdg : (home + "/.local/state")
-    return base + "/omarchy/ink.mode"
+    return base + "/omarchy/inkMode"
   }
 
   property string mode: "normal"

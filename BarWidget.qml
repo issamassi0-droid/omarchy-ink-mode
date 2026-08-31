@@ -5,10 +5,10 @@ import "InkModel.js" as InkModel
 
 BarWidget {
   id: root
-  moduleName: "ink.mode"
+  moduleName: "jinxnet.inkMode"
 
   readonly property var service: bar && bar.shell && typeof bar.shell.firstPartyServiceFor === "function"
-    ? bar.shell.firstPartyServiceFor("ink.mode")
+    ? bar.shell.firstPartyServiceFor("jinxnet.inkMode")
     : null
 
   readonly property string cycleScript: {

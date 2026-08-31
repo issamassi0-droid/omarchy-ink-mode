@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "id": "ink.mode",
+  "id": "jinxnet.inkMode",
   "name": "Ink Mode",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "author": "Brad Jinks",
   "license": "MIT",
   "description": "Cycle the whole screen between Normal, Color Ink, and Ink modes. Remembers the last mode across login and theme changes.",

@@ -6,7 +6,7 @@ dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 color_ink="$dir/shaders/color-ink.frag"
 ink="$dir/shaders/ink.frag"
 state_dir="${XDG_STATE_HOME:-$HOME/.local/state}/omarchy"
-state_file="$state_dir/ink.mode"
+state_file="$state_dir/inkMode"
 
 current() {
   hyprctl getoption decoration:screen_shader -j 2>/dev/null || true
