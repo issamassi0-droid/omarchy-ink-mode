@@ -1,0 +1,29 @@
+{
+  "schemaVersion": 1,
+  "id": "ink.mode",
+  "name": "Ink Mode",
+  "version": "1.0.0",
+  "author": "Brad Jinks",
+  "license": "MIT",
+  "description": "Cycle the whole screen between Normal, Color Ink, and Ink modes. Compositor-wide, including video.",
+  "homepage": "https://github.com/bradjinks/omarchy-ink-mode",
+  "kinds": [
+    "bar-widget"
+  ],
+  "entryPoints": {
+    "barWidget": "BarWidget.qml"
+  },
+  "barWidget": {
+    "displayName": "Ink Mode",
+    "description": "Cycle Normal, Color Ink, and Ink screen filters",
+    "category": "Appearance",
+    "aliases": [
+      "ink",
+      "paper",
+      "grayscale",
+      "desaturate"
+    ],
+    "allowMultiple": false,
+    "defaultSection": "right"
+  }
+}
