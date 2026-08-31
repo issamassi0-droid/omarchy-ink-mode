@@ -1,5 +1,6 @@
 import QtQuick
 import Quickshell.Io
+import qs.Commons
 import qs.Ui
 import "InkModel.js" as InkModel
 
@@ -19,10 +20,12 @@ BarWidget {
   property string fallbackMode: "normal"
   readonly property string mode: service ? InkModel.normalize(service.mode) : fallbackMode
 
-  readonly property string glyph: {
-    if (mode === "color-ink") return "󰏕" // md-pen
-    if (mode === "ink") return "󰏪" // md-fountain-pen
-    return "󱙯" // md-pen-off
+  readonly property color penColor: {
+    if (mode === "color-ink")
+      return bar && bar.urgent ? bar.urgent : Color.urgent
+    if (mode === "normal")
+      return Qt.darker(bar && bar.barForeground ? bar.barForeground : Color.foreground, 1.35)
+    return bar && bar.barForeground ? bar.barForeground : Color.foreground
   }
 
   implicitWidth: button.implicitWidth
@@ -75,9 +78,19 @@ BarWidget {
     id: button
     anchors.fill: parent
     bar: root.bar
-    text: root.glyph
     active: root.mode !== "normal"
     tooltipText: InkModel.label(root.mode) + " — " + InkModel.description(root.mode)
+    iconComponent: Component {
+      Item {
+        PenIcon {
+          anchors.centerIn: parent
+          iconSize: Style.bar.iconCanvas
+          color: root.penColor
+          slashed: root.mode === "normal"
+          fontFamily: root.bar ? root.bar.fontFamily : Style.font.family
+        }
+      }
+    }
     onPressed: function() { root.cycle() }
   }
 }
