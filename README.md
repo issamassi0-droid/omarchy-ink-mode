@@ -1,87 +1,88 @@
-# Ink Mode
+折腾过彩色电子墨水屏以后，爱不释手。尤其是那种柔和而有层次感的调色，很想给你的阅读和编码桌面也弄一个：不是别的，而是一个整体屏幕的柔光滤镜。
 
-I tried a color e-ink reader once. Loved the muted palette. Did not love the price.
+**Lighten** 是微妙的压色，介于 Normal 和 Color Ink 之间，更接近日常观感。**Enhance** 保留大部分色彩出力，在中间调加入柔和提亮而不剧烈，适合希望保留更多原味但又不太过生猛的情形。**Color Ink** 保留色相但对纯度做了克制，像印刷品那样。**Ink** 更进一步，呈现暖灰色调，如报纸印品。**Normal** 即为“完全放开”的日常状态。
 
-That look is what I wanted for reading and coding: color, just quieter. Desktop themes get you most of the way there. Then you open a webpage or a YouTube tab and the difference is almost painful — calm editor, neon everything else.
+这是一种 Omarchy bar widget 和服务。登录后和更换主题时会恢复上一次的模式。
 
-So I wondered: what if the *whole* screen just got a little desaturated? Not another theme. A filter.
-
-**Lighten** is subtly muted color, closer to normal but less vibrant. **Color Ink** keeps hue but takes the punch out, the way print holds color without glow. **Ink** goes further: warm grayscale, like newsprint. **Normal** is the unfiltered display, one click away when you actually want the fireworks.
-
-An [Omarchy](https://omarchy.org) bar widget and service. Last mode is restored after login and after Style changes.
-
-| Mode | Look |
+| 模式 | 外观 |
 |---|---|
-| **Normal** | Unfiltered color |
-| **Lighten** | Subtly muted color |
-| **Color Ink** | Soft, print-like color |
-| **Ink** | Warm grayscale, like newsprint |
+| **Normal** | 未做处理的日常色彩 |
+| **Lighten** | 微妙压色，更日常 |
+| **Enhance** | 稍微提亮中间调，但又不太剧烈 |
+| **Color Ink** | 柔和的色相，纯度克制（类似印刷） |
+| **Ink** | 暖灰色调，如报纸印品 |
 
-## Install
+## 安装
 
 ```bash
 omarchy plugin add https://github.com/bradjinks/omarchy-ink-mode.git --enable
 ```
 
-That puts a chip on the right of the bar. Click it to cycle **Normal → Lighten → Color Ink → Ink → Normal**. No extra packages: it uses Hyprland’s screen shader, which Omarchy already has.
+这会在右侧栏嵌入一个小按钮。点击它，会按照 **Normal → Lighten → Enhance → Color Ink → Ink → Normal** 的顺序轮转。
 
-Optional Hyprland bind (add to `~/.config/hypr/bindings.lua`):
+可选 Hyprland 绑定（添加到 `~/.config/hypr/bindings.lua`）：
 
 ```lua
 o.bind("SUPER + CTRL + SHIFT + N", "Cycle ink mode", "omarchy-shell inkMode cycle")
 ```
 
-That goes through the plugin service so the bar chip stays in sync after login. If the shell is not up yet, bind `cycle.sh` instead (same path as the CLI below).
+走插件服务能让换到下一种模式后右侧小按钮保持同步。如果 Shell 还没起来，直接用 `cycle.sh` 更稳妥（下面是同一脚本，路径维持一致）。
 
-## Remove
+## 卸载
 
-Switch to **Normal** first so the screen filter is cleared, then:
+先切到 Normal，把滤镜清空，然后再：
 
 ```bash
 omarchy plugin remove jinxnet.inkmode
 ```
 
-That uninstalls the plugin and takes the chip off the bar. It does not edit a Hyprland bind you added by hand.
+这会移除插件，并把右侧栏上的小按钮摘下来。你手动添加的绑定不会被改掉。
 
-Disabling without removing (`omarchy plugin disable jinxnet.inkmode`) leaves an active filter in place until you switch to Normal, or reload Hyprland with no shader set.
+## 命令行/脚本用法
 
-Optional leftovers:
-
-- `~/.local/state/omarchy/inkMode` — last saved mode
-- the optional bind in `~/.config/hypr/bindings.lua`
-
-## CLI
-
-The plugin needs to be enabled and `omarchy-shell` running.
+插件启用且 `omarchy-shell` 运行中时：
 
 ```bash
 omarchy-shell inkMode status          # {"mode":"color-ink","desired":"color-ink"}
-omarchy-shell inkMode cycle           # Normal → Lighten → Color Ink → Ink → Normal
-omarchy-shell inkMode set color-ink   # or: lighten / ink / normal
+omarchy-shell inkMode cycle           # 循环：Normal → Lighten → Enhance → Color Ink → Ink → Normal
+omarchy-shell inkMode set lighten     # 以下是可选模式：lighten/ enhance/ color-ink/ ink/ normal
 omarchy-shell inkMode refresh
 ```
 
-`cycle.sh` does the same from a script or keybind, including when IPC is down:
+`cycle.sh` 无论 IPC 是否开启都能工作，适合直接绑定到按键：
 
 ```bash
-~/.config/omarchy/plugins/jinxnet.inkmode/cycle.sh           # cycle
-~/.config/omarchy/plugins/jinxnet.inkmode/cycle.sh status    # live Hyprland shader
+~/.config/omarchy/plugins/jinxnet.inkmode/cycle.sh           # 循环
+~/.config/omarchy/plugins/jinxnet.inkmode/cycle.sh status    # 当前 Hyprland 滤镜状态
 ~/.config/omarchy/plugins/jinxnet.inkmode/cycle.sh color-ink
 ~/.config/omarchy/plugins/jinxnet.inkmode/cycle.sh lighten
 ~/.config/omarchy/plugins/jinxnet.inkmode/cycle.sh ink
 ~/.config/omarchy/plugins/jinxnet.inkmode/cycle.sh normal
 ```
 
-## Tweaking Color Ink
+## CLI 层说明（系统范围）
 
-Edit `shaders/color-ink.frag` and change `SATURATION` (1.0 = unchanged, 0.0 = grayscale). Then cycle away from Color Ink and back, or reload Hyprland.
+Fedora 的 `cycle.sh` 脚本会替你对整个屏幕层面的 OpenGL 滤镜进行调度（即基于 Hyprland 的 `decoration.screen_shader`）。日常使用推荐走 Omarchy 的 `omarchy-shell inkMode set …` 或 `cycle.sh`，而将 `omarchy-shell` 保持在后台守护（用户目录下的 `bin/omarchy-shell` 或系统安装路径如 `/usr/local/bin/omarchy-shell`）即可自动轮换。
 
-## Notes
+## 调整 Ink 色调（Color Ink / Enhance）
 
-- The last mode is saved in `~/.local/state/omarchy/inkMode` and restored on login, after Style changes, and after `hyprctl reload`.
-- Some exclusive-fullscreen games skip Hyprland and will not be filtered.
-- Switch to Normal before disabling the plugin if you want the filter cleared immediately.
+- `shaders/color-ink.frag`：修改 `SATURATION`（1.0 = 不动，0.0 = 灰度）
+- `shaders/enhance.frag`：调整 `VIBRANCE`（boost 动作）、`GAMMA`（中间调亮度）等
 
-## License
+改完 cycle 离开再回来，或者直接 reload Hyprland 即可应用。
+
+## 文件与缓存
+
+- `~/.local/state/omarchy/inkMode`：记录上次保存的模式
+- `~/.config/omarchy/plugins/jinxnet.inkmode/shaders/*`：GLSL 滤镜实现
+- `~/.config/omarchy/plugins/jinxnet.inkmode/cycle.sh`：CLI/脚本入口脚本
+
+## 注意事项
+
+- 上次模式会在登录、主题变更以及 `hyprctl reload` 后恢复。
+- 部分独占全屏游戏会绕过 Hyprland，从而无法被滤镜覆盖。
+- 卸载插件前请先把模式切回 Normal，以免长时间保留滤镜残留影响体验。
+
+## 许可证
 
 MIT

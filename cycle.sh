@@ -6,6 +6,7 @@ dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 color_ink="$dir/shaders/color-ink.frag"
 lighten="$dir/shaders/lighten.frag"
 ink="$dir/shaders/ink.frag"
+vibrance="$dir/shaders/vibrance.frag"
 state_dir="${XDG_STATE_HOME:-$HOME/.local/state}/omarchy"
 state_file="$state_dir/inkMode"
 
@@ -17,6 +18,8 @@ mode_from_hypr() {
   local json="$1"
   if printf '%s' "$json" | grep -q 'color-ink.frag'; then
     printf 'color-ink'
+  elif printf '%s' "$json" | grep -q 'vibrance.frag'; then
+    printf 'vibrance'
   elif printf '%s' "$json" | grep -q 'lighten.frag'; then
     printf 'lighten'
   elif printf '%s' "$json" | grep -q '/ink.frag'; then
@@ -33,7 +36,7 @@ read_desired() {
     local saved
     saved=$(tr -d '[:space:]' <"$state_file")
     case "$saved" in
-      normal|color-ink|ink|lighten) printf '%s' "$saved" ;;
+      normal|color-ink|ink|lighten|vibrance) printf '%s' "$saved" ;;
       *) printf 'normal' ;;
     esac
   else
@@ -69,6 +72,11 @@ set -- "${args[@]+"${args[@]}"}"
 
 apply() {
   case "$1" in
+    vibrance)
+      set_shader "$vibrance"
+      write_desired vibrance
+      [[ $quiet == true ]] || notify "Vibrance" "Lifted color, reduced gamma"
+      ;;
     color-ink)
       set_shader "$color_ink"
       write_desired color-ink
@@ -95,7 +103,8 @@ apply() {
 next_mode() {
   case "$1" in
     normal) printf 'lighten' ;;
-    lighten) printf 'color-ink' ;;
+    lighten) printf 'vibrance' ;;
+    vibrance) printf 'color-ink' ;;
     color-ink) printf 'ink' ;;
     *) printf 'normal' ;;
   esac
@@ -115,14 +124,14 @@ case "$cmd" in
   restore)
     apply "$desired"
     ;;
-  normal|lighten|color-ink|ink)
+  normal|lighten|vibrance|color-ink|ink)
     apply "$cmd"
     ;;
   cycle)
     apply "$(next_mode "$desired")"
     ;;
   *)
-    echo "Usage: cycle.sh [cycle|status|desired|restore|normal|lighten|color-ink|ink] [--quiet]" >&2
+    echo "Usage: cycle.sh [cycle|status|desired|restore|normal|lighten|vibrance|color-ink|ink] [--quiet]" >&2
     exit 1
     ;;
 esac

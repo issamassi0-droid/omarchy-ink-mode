@@ -104,7 +104,7 @@ Item {
       waitForEnd: true
       onStreamFinished: {
         var raw = String(text).trim()
-        if (raw !== "normal" && raw !== "color-ink" && raw !== "ink" && raw !== "lighten")
+        if (raw !== "normal" && raw !== "color-ink" && raw !== "ink" && raw !== "lighten" && raw !== "vibrance")
           return
         var saved = InkModel.normalize(raw)
         root.desiredMode = saved
@@ -138,7 +138,7 @@ Item {
       waitForEnd: true
       onStreamFinished: {
         var raw = String(text).trim()
-        if (raw !== "normal" && raw !== "color-ink" && raw !== "ink" && raw !== "lighten")
+        if (raw !== "normal" && raw !== "color-ink" && raw !== "ink" && raw !== "lighten" && raw !== "vibrance")
           return
         var saved = InkModel.normalize(raw)
         var live = InkModel.normalize(diskProbe.pendingLive)

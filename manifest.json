@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "id": "jinxnet.inkmode",
   "name": "Ink Mode",
-  "version": "1.2.2",
+  "version": "1.3.0",
   "author": "Brad Jinks",
   "license": "MIT",
   "description": "A print-like filter for the whole screen — good for books and graphic novels, long coding sessions, and night-time viewing. Color Ink keeps hue without the glow; Ink is warm grayscale. Last mode comes back after login and Style changes.",
