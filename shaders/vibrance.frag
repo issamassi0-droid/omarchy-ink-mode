@@ -1,4 +1,4 @@
-// Vibrance Mode: lifted color with reduced gamma for a softer, brighter read.
+// Vibrance Mode: muted, uniform desaturation with reduced gamma for a softer read.
 // VIBRANCE 1.0 = unchanged saturation; GAMMA < 1.0 brightens midtones.
 
 #version 300 es
@@ -8,8 +8,8 @@ in vec2 v_texcoord;
 layout(location = 0) out vec4 fragColor;
 uniform sampler2D tex;
 
-const float VIBRANCE = 0.75;
-const float GAMMA = 1.24;
+const float VIBRANCE = 0.65;
+const float GAMMA = 1.3;
 const float CONTRAST = 0.80;
 const float BOOST_THRESHOLD = 0.5;
 const float BOOST_FALLOFF = 0.25;
@@ -29,8 +29,12 @@ void main() {
     // Basic saturation/constrast
     vec3 color = (saturated - 0.5) * CONTRAST + 0.5;
 
-    // Subtle hue tweaks: enhance green, slightly suppress blue
-    color *= mix(vec3(0.95, 0.98, 0.92), vec3(1.0), smoothstep(0.0, 1.0, y));
+    // Uniform muting: blend all channels equally toward gray
+    color = mix(color, vec3(y), 0.15);
+
+    // Roll-off proportional to luminance: darker colors less, brighter colors more
+    float rolloff = smoothstep(0.0, 1.0, y) * 0.18;
+    color = mix(color, color * 0.82, rolloff);
 
     // Clamp last and apply gamma
     color = clamp(color, 0.0, 1.0);

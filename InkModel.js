@@ -30,7 +30,7 @@ function label(mode) {
 
 function description(mode) {
   if (mode === "lighten") return "Subtly muted color"
-  if (mode === "vibrance") return "Lifted color, reduced gamma"
+  if (mode === "vibrance") return "Muted, uniform desaturation"
   if (mode === "color-ink") return "Soft, print-like color"
   if (mode === "ink") return "Warm grayscale, like newsprint"
   return "Unfiltered color"
