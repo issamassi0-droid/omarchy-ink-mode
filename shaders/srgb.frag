@@ -1,4 +1,5 @@
 // sRGB Mode: neutral soft, blue reduced for comfort.
+// Close to Color Ink character: no gamma, moderate contrast.
 
 #version 300 es
 precision mediump float;
@@ -8,10 +9,9 @@ layout(location = 0) out vec4 fragColor;
 uniform sampler2D tex;
 
 const float WARMTH = 0.0;
-const float SATURATION = 0.96;
-const float CONTRAST = 0.95;
-const float GAMMA = 0.97;
-const float BLUE_REDUCE = 0.06;
+const float SATURATION = 0.94;
+const float CONTRAST = 0.92;
+const float BLUE_REDUCE = 0.05;
 const vec3 LUMA = vec3(0.2126, 0.7152, 0.0722);
 
 float srgbToLinear(float c) {
@@ -44,9 +44,9 @@ void main() {
 
     b2 *= (1.0 - BLUE_REDUCE);
 
-    r2 = linearToSrgb(pow(clamp(r2, 0.0, 1.0), GAMMA));
-    g2 = linearToSrgb(pow(clamp(g2, 0.0, 1.0), GAMMA));
-    b2 = linearToSrgb(pow(clamp(b2, 0.0, 1.0), GAMMA));
+    r2 = linearToSrgb(r2);
+    g2 = linearToSrgb(g2);
+    b2 = linearToSrgb(b2);
 
     fragColor = vec4(r2, g2, b2, pix.a);
 }

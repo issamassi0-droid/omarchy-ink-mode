@@ -1,4 +1,5 @@
 // Wide Gamut Mode: cool-muted, blue reduced, bright soft.
+// Close to Color Ink character: slight gamma lift, lower contrast.
 
 #version 300 es
 precision mediump float;
@@ -7,11 +8,11 @@ in vec2 v_texcoord;
 layout(location = 0) out vec4 fragColor;
 uniform sampler2D tex;
 
-const float WARMTH = 0.01;
-const float SATURATION = 0.88;
-const float CONTRAST = 0.93;
-const float GAMMA = 1.03;
-const float BLUE_REDUCE = 0.08;
+const float WARMTH = 0.0;
+const float SATURATION = 0.86;
+const float CONTRAST = 0.88;
+const float GAMMA = 1.02;
+const float BLUE_REDUCE = 0.07;
 const vec3 LUMA = vec3(0.2126, 0.7152, 0.0722);
 
 float srgbToLinear(float c) {
