@@ -1,6 +1,4 @@
-// Neo16 Mode: warm-shifted wide gamut, soft and easy on the eyes.
-// Strong warmth 0.05, gentle desaturation 0.92, low contrast 0.94,
-// brighter gamma 1.04 for late-night comfort.
+// Neo16 Mode: warm soft night mode, heavy blue reduction.
 
 #version 300 es
 precision mediump float;
@@ -9,10 +7,11 @@ in vec2 v_texcoord;
 layout(location = 0) out vec4 fragColor;
 uniform sampler2D tex;
 
-const float WARMTH = 0.05;
-const float SATURATION = 0.92;
-const float CONTRAST = 0.94;
-const float GAMMA = 1.04;
+const float WARMTH = 0.06;
+const float SATURATION = 0.85;
+const float CONTRAST = 0.90;
+const float GAMMA = 1.07;
+const float BLUE_REDUCE = 0.12;
 const vec3 LUMA = vec3(0.2126, 0.7152, 0.0722);
 
 float srgbToLinear(float c) {
@@ -42,6 +41,8 @@ void main() {
     r2 = (r2 - 0.5) * CONTRAST + 0.5;
     g2 = (g2 - 0.5) * CONTRAST + 0.5;
     b2 = (b2 - 0.5) * CONTRAST + 0.5;
+
+    b2 *= (1.0 - BLUE_REDUCE);
 
     r2 = linearToSrgb(pow(clamp(r2, 0.0, 1.0), GAMMA));
     g2 = linearToSrgb(pow(clamp(g2, 0.0, 1.0), GAMMA));

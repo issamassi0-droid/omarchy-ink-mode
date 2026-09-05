@@ -1,5 +1,4 @@
-// P3 Mode: subtle DCI-P3 warmth shift.
-// Warmth 0.025, slight desaturation, soft contrast, brighter gamma.
+// P3 Mode: warm vivid shift, blue reduced for comfort.
 
 #version 300 es
 precision mediump float;
@@ -8,10 +7,11 @@ in vec2 v_texcoord;
 layout(location = 0) out vec4 fragColor;
 uniform sampler2D tex;
 
-const float WARMTH = 0.025;
-const float SATURATION = 0.98;
-const float CONTRAST = 0.97;
-const float GAMMA = 1.02;
+const float WARMTH = 0.03;
+const float SATURATION = 1.06;
+const float CONTRAST = 0.98;
+const float GAMMA = 1.00;
+const float BLUE_REDUCE = 0.04;
 const vec3 LUMA = vec3(0.2126, 0.7152, 0.0722);
 
 float srgbToLinear(float c) {
@@ -41,6 +41,8 @@ void main() {
     r2 = (r2 - 0.5) * CONTRAST + 0.5;
     g2 = (g2 - 0.5) * CONTRAST + 0.5;
     b2 = (b2 - 0.5) * CONTRAST + 0.5;
+
+    b2 *= (1.0 - BLUE_REDUCE);
 
     r2 = linearToSrgb(pow(clamp(r2, 0.0, 1.0), GAMMA));
     g2 = linearToSrgb(pow(clamp(g2, 0.0, 1.0), GAMMA));
