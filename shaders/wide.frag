@@ -32,7 +32,7 @@ void main() {
 
     float r2 = r + WARMTH * (r - b);
     float b2 = b + WARMTH * (b - r);
-    float g2 = g2 = g;
+    float g2 = g;
 
     float y = 0.2126 * r2 + 0.7152 * g2 + 0.0722 * b2;
     r2 = mix(y, r2, SATURATION);
