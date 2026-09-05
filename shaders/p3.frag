@@ -1,5 +1,5 @@
-// P3 Mode: DCI-P3 wide-gamut color, soft contrast like printed color.
-// Matrix baked from DCI-P3 primaries (D65 white).
+// P3 Mode: subtle DCI-P3 warmth shift.
+// Gentle warmth (w=0.02), slight saturation boost, soft contrast.
 
 #version 300 es
 precision mediump float;
@@ -8,29 +8,47 @@ in vec2 v_texcoord;
 layout(location = 0) out vec4 fragColor;
 uniform sampler2D tex;
 
-const mat3 M = mat3(
-    2.49349691, -0.93138362, -0.40271078,
-   -0.82948897,  1.76266406,  0.02362469,
-    0.03584583, -0.07617239,  0.95688452
-);
-const float GAMMA = 2.2;
-const float CONTRAST = 0.92;
+const float WARMTH = 0.02;
+const float SATURATION = 1.02;
+const float CONTRAST = 0.99;
+const float GAMMA = 1.01;
 const vec3 LUMA = vec3(0.2126, 0.7152, 0.0722);
 
-vec3 srgbToLinear(vec3 c) {
-    return mix(c / 12.92, pow((c + 0.055) / 1.055, vec3(2.4)), step(0.04045, c));
+float srgbToLinear(float c) {
+    return c <= 0.04045 ? c / 12.92 : pow((c + 0.055) / 1.055, 2.4);
 }
 
-vec3 linearToSrgb(vec3 c) {
-    return mix(c * 12.92, pow(clamp(c, 0.0, 1.0), vec3(1.0 / 2.4)) * 1.055 - 0.055, step(0.0031308, c));
+float linearToSrgb(float c) {
+    c = clamp(c, 0.0, 1.0);
+    return c <= 0.0031308 ? c * 12.92 : pow(c, 1.0 / 2.4) * 1.055 - 0.055;
 }
 
 void main() {
     vec4 pix = texture(tex, v_texcoord);
-    vec3 lin = srgbToLinear(pix.rgb);
-    vec3 color = M * lin;
-    float y = dot(color, LUMA);
-    color = (color - 0.5) * CONTRAST + 0.5;
-    color = linearToSrgb(color);
-    fragColor = vec4(color, pix.a);
+    float r = srgbToLinear(pix.r);
+    float g = srgbToLinear(pix.g);
+    float b = srgbToLinear(pix.b);
+
+    // Warmth: shift R up, B down (preserves white)
+    float r2 = r + WARMTH * (r - b);
+    float b2 = b + WARMTH * (b - r);
+    float g2 = g;
+
+    // Saturation
+    float y = 0.2126 * r2 + 0.7152 * g2 + 0.0722 * b2;
+    r2 = mix(y, r2, SATURATION);
+    g2 = mix(y, g2, SATURATION);
+    b2 = mix(y, b2, SATURATION);
+
+    // Contrast
+    r2 = (r2 - 0.5) * CONTRAST + 0.5;
+    g2 = (g2 - 0.5) * CONTRAST + 0.5;
+    b2 = (b2 - 0.5) * CONTRAST + 0.5;
+
+    // Gamma + back to sRGB
+    r2 = linearToSrgb(pow(clamp(r2, 0.0, 1.0), vec3(GAMMA)).r);
+    g2 = linearToSrgb(pow(clamp(g2, 0.0, 1.0), vec3(GAMMA)).r);
+    b2 = linearToSrgb(pow(clamp(b2, 0.0, 1.0), vec3(GAMMA)).r);
+
+    fragColor = vec4(r2, g2, b2, pix.a);
 }
