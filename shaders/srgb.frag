@@ -1,5 +1,5 @@
-// sRGB Mode: neutral soft, blue reduced for comfort.
-// Close to Color Ink character: no gamma, moderate contrast.
+// sRGB Mode: neutral soft, blue reduced. No gamma — like Color Ink.
+// Higher saturation than Color Ink for visible color.
 
 #version 300 es
 precision mediump float;

@@ -1,5 +1,5 @@
-// Neo16 Mode: warm soft night mode, heavy blue reduction.
-// Close to Ink character: warm, very soft, brightest.
+// Neo16 Mode: warm soft night mode. No gamma — like Color Ink.
+// Warmest + most muted + lowest contrast.
 
 #version 300 es
 precision mediump float;
@@ -11,7 +11,6 @@ uniform sampler2D tex;
 const float WARMTH = 0.05;
 const float SATURATION = 0.82;
 const float CONTRAST = 0.85;
-const float GAMMA = 0.95;
 const float BLUE_REDUCE = 0.10;
 const vec3 LUMA = vec3(0.2126, 0.7152, 0.0722);
 
@@ -45,9 +44,9 @@ void main() {
 
     b2 *= (1.0 - BLUE_REDUCE);
 
-    r2 = linearToSrgb(pow(clamp(r2, 0.0, 1.0), GAMMA));
-    g2 = linearToSrgb(pow(clamp(g2, 0.0, 1.0), GAMMA));
-    b2 = linearToSrgb(pow(clamp(b2, 0.0, 1.0), GAMMA));
+    r2 = linearToSrgb(r2);
+    g2 = linearToSrgb(g2);
+    b2 = linearToSrgb(b2);
 
     fragColor = vec4(r2, g2, b2, pix.a);
 }
