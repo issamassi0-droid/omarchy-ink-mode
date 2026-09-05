@@ -1,5 +1,5 @@
 // Wide Gamut Mode: cool-muted, with stronger gamma darkening.
-// Gamma 1.25 and saturation 0.94 for distinct midtone coloring.
+// Gamma 1.25 and saturation 0.99 for distinct midtone coloring.
 
 #version 300 es
 precision mediump float;
@@ -9,7 +9,7 @@ layout(location = 0) out vec4 fragColor;
 uniform sampler2D tex;
 
 const float WARMTH = 0.0;
-const float SATURATION = 0.94;
+const float SATURATION = 0.99;
 const float CONTRAST = 0.88;
 const float GAMMA = 1.25;
 const float BLUE_REDUCE = 0.07;

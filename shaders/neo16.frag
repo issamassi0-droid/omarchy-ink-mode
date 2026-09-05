@@ -1,5 +1,5 @@
 // Neo16 Mode: warm soft night mode, with strong gamma darkening.
-// Gamma 1.30 and saturation 0.90 for the most muted, comfortable viewing.
+// Gamma 1.30 and saturation 0.95 for the most muted, comfortable viewing.
 
 #version 300 es
 precision mediump float;
@@ -9,7 +9,7 @@ layout(location = 0) out vec4 fragColor;
 uniform sampler2D tex;
 
 const float WARMTH = 0.05;
-const float SATURATION = 0.90;
+const float SATURATION = 0.95;
 const float CONTRAST = 0.85;
 const float GAMMA = 1.30;
 const float BLUE_REDUCE = 0.10;

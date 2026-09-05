@@ -1,5 +1,5 @@
 // sRGB Mode: neutral soft, with stronger gamma brightening.
-// Gamma 1.20 lifts midtones further, saturation 0.97 for more vivid color.
+// Gamma 1.20 lifts midtones further, saturation 1.02 for more vivid color.
 
 #version 300 es
 precision mediump float;
@@ -9,7 +9,7 @@ layout(location = 0) out vec4 fragColor;
 uniform sampler2D tex;
 
 const float WARMTH = 0.0;
-const float SATURATION = 0.97;
+const float SATURATION = 1.02;
 const float CONTRAST = 0.92;
 const float GAMMA = 1.20;
 const float BLUE_REDUCE = 0.05;
