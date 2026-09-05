@@ -1,5 +1,5 @@
-// P3 Mode: warm vivid shift, with reduced gamma.
-// Gamma 0.90 brightens midtones moderately, saturation 1.03 for vivid color.
+// P3 Mode: warm vivid shift, with increased gamma.
+// Gamma 1.05 brightens midtones moderately, saturation 1.03 for vivid color.
 
 #version 300 es
 precision mediump float;
@@ -11,7 +11,7 @@ uniform sampler2D tex;
 const float WARMTH = 0.03;
 const float SATURATION = 1.03;
 const float CONTRAST = 0.98;
-const float GAMMA = 0.90;
+const float GAMMA = 1.05;
 const float BLUE_REDUCE = 0.04;
 const vec3 LUMA = vec3(0.2126, 0.7152, 0.0722);
 
@@ -41,9 +41,9 @@ void main() {
 
     r2 = (r2 - 0.5) * CONTRAST + 0.5;
     g2 = (g2 - 0.5) * CONTRAST + 0.5;
-    b2 = (b2 - 0.5) * CONTRAST + 0.0;
+    b2 = (b2 - 0.5) * CONTRAST + 0.5;
 
-    // Gamma: 0.90 brightens midtones
+    // Gamma: 1.05 brightens midtones moderately
     r2 = linearToSrgb(pow(clamp(r2, 0.0, 1.0), GAMMA));
     g2 = linearToSrgb(pow(clamp(g2, 0.0, 1.0), GAMMA));
     b2 = linearToSrgb(pow(clamp(b2, 0.0, 1.0), GAMMA));

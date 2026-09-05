@@ -1,5 +1,5 @@
-// Neo16 Mode: warm soft night mode, with reduced gamma.
-// Gamma 1.30 darkens midtones moderately, saturation 0.92.
+// Neo16 Mode: warm soft night mode, with increased gamma.
+// Gamma 1.45 darkens midtones moderately, saturation 0.92.
 
 #version 300 es
 precision mediump float;
@@ -11,7 +11,7 @@ uniform sampler2D tex;
 const float WARMTH = 0.05;
 const float SATURATION = 0.92;
 const float CONTRAST = 0.85;
-const float GAMMA = 1.30;
+const float GAMMA = 1.45;
 const float BLUE_REDUCE = 0.10;
 const vec3 LUMA = vec3(0.2126, 0.7152, 0.0722);
 
@@ -43,7 +43,7 @@ void main() {
     g2 = (g2 - 0.5) * CONTRAST + 0.5;
     b2 = (b2 - 0.5) * CONTRAST + 0.5;
 
-    // Gamma: 1.30 darkens midtones moderately
+    // Gamma: 1.45 darkens midtones moderately
     r2 = linearToSrgb(pow(clamp(r2, 0.0, 1.0), GAMMA));
     g2 = linearToSrgb(pow(clamp(g2, 0.0, 1.0), GAMMA));
     b2 = linearToSrgb(pow(clamp(b2, 0.0, 1.0), GAMMA));
