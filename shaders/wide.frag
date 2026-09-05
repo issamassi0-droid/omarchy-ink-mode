@@ -1,5 +1,5 @@
-// Wide Gamut Mode: cool-muted, blue reduced in sRGB space for clean whites.
-// Lower saturation than sRGB for distinct look.
+// Wide Gamut Mode: cool-muted, with gentle gamma darkening.
+// Gamma 1.20 reduces midtones more than whites, creating subtle muting.
 
 #version 300 es
 precision mediump float;
@@ -11,6 +11,7 @@ uniform sampler2D tex;
 const float WARMTH = 0.0;
 const float SATURATION = 0.86;
 const float CONTRAST = 0.88;
+const float GAMMA = 1.20;
 const float BLUE_REDUCE = 0.07;
 const vec3 LUMA = vec3(0.2126, 0.7152, 0.0722);
 
@@ -42,9 +43,10 @@ void main() {
     g2 = (g2 - 0.5) * CONTRAST + 0.5;
     b2 = (b2 - 0.5) * CONTRAST + 0.5;
 
-    r2 = linearToSrgb(r2);
-    g2 = linearToSrgb(g2);
-    b2 = linearToSrgb(b2);
+    // Gamma: >1 darkens midtones, preserving 0.0 and 1.0 endpoints
+    r2 = linearToSrgb(pow(clamp(r2, 0.0, 1.0), GAMMA));
+    g2 = linearToSrgb(pow(clamp(g2, 0.0, 1.0), GAMMA));
+    b2 = linearToSrgb(pow(clamp(b2, 0.0, 1.0), GAMMA));
 
     b2 *= (1.0 - BLUE_REDUCE);
 
