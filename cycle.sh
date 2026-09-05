@@ -6,7 +6,7 @@ dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 srgb="$dir/shaders/srgb.frag"
 p3="$dir/shaders/p3.frag"
 wide="$dir/shaders/wide.frag"
-neo16="$dir/shaders/neo16.frag"
+neo="$dir/shaders/neo.frag"
 color_ink="$dir/shaders/color-ink.frag"
 ink="$dir/shaders/ink.frag"
 state_dir="${XDG_STATE_HOME:-$HOME/.local/state}/omarchy"
@@ -20,8 +20,8 @@ mode_from_hypr() {
   local json="$1"
   if printf '%s' "$json" | grep -q 'color-ink.frag'; then
     printf 'color-ink'
-  elif printf '%s' "$json" | grep -q 'neo16.frag'; then
-    printf 'neo16'
+  elif printf '%s' "$json" | grep -q 'neo.frag'; then
+    printf 'neo'
   elif printf '%s' "$json" | grep -q 'wide.frag'; then
     printf 'wide'
   elif printf '%s' "$json" | grep -q 'srgb.frag'; then
@@ -40,7 +40,7 @@ read_desired() {
     local saved
     saved=$(tr -d '[:space:]' <"$state_file")
     case "$saved" in
-      normal|color-ink|ink|p3|srgb|wide|neo16) printf '%s' "$saved" ;;
+      normal|color-ink|ink|p3|srgb|wide|neo) printf '%s' "$saved" ;;
       *) printf 'normal' ;;
     esac
   else
@@ -90,9 +90,9 @@ apply() {
       write_desired wide
       [[ $quiet == true ]] || notify "Wide Gamut" "Adobe-like wide gamut, warm desaturation"
       ;;
-    neo16)
-      set_shader "$neo16"
-      write_desired neo16
+    neo)
+      set_shader "$neo"
+      write_desired neo
       [[ $quiet == true ]] || notify "Neo" "Warm-shifted wide gamut, softer contrast"
       ;;
     color-ink)
@@ -118,8 +118,8 @@ next_mode() {
     normal) printf 'p3' ;;
     p3) printf 'srgb' ;;
     srgb) printf 'wide' ;;
-    wide) printf 'neo16' ;;
-    neo16) printf 'color-ink' ;;
+    wide) printf 'neo' ;;
+    neo) printf 'color-ink' ;;
     color-ink) printf 'ink' ;;
     *) printf 'normal' ;;
   esac
@@ -139,14 +139,14 @@ case "$cmd" in
   restore)
     apply "$desired"
     ;;
-  normal|p3|srgb|wide|neo16|color-ink|ink)
+  normal|p3|srgb|wide|neo|color-ink|ink)
     apply "$cmd"
     ;;
   cycle)
     apply "$(next_mode "$desired")"
     ;;
   *)
-    echo "Usage: cycle.sh [cycle|status|desired|restore|normal|p3|srgb|wide|neo16|color-ink|ink] [--quiet]" >&2
+    echo "Usage: cycle.sh [cycle|status|desired|restore|normal|p3|srgb|wide|neo|color-ink|ink] [--quiet]" >&2
     exit 1
     ;;
 esac
