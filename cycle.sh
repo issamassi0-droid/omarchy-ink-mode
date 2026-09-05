@@ -1,5 +1,5 @@
 #!/bin/bash
-# Cycle compositor ink modes: Normal → P3 → sRGB → Wide Gamut → Neo16 → Color Ink → Ink → Normal.
+# Cycle compositor ink modes: Normal → P3 → sRGB → Wide Gamut → Neo → Color Ink → Ink → Normal.
 set -euo pipefail
 
 dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -93,7 +93,7 @@ apply() {
     neo16)
       set_shader "$neo16"
       write_desired neo16
-      [[ $quiet == true ]] || notify "Neo16" "Warm-shifted wide gamut, softer contrast"
+      [[ $quiet == true ]] || notify "Neo" "Warm-shifted wide gamut, softer contrast"
       ;;
     color-ink)
       set_shader "$color_ink"

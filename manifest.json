@@ -5,7 +5,7 @@
   "version": "2.0.0",
   "author": "Brad Jinks / issamassi0-droid",
   "license": "MIT",
-  "description": "Print-like screen filter with 7 modes: Normal, P3, sRGB, Wide Gamut, Neo16, Color Ink, Ink. Wide gamut profiles and Neo16 warm mode added; Lighten and Vibrance removed.",
+  "description": "Print-like screen filter with 7 modes: Normal, P3, sRGB, Wide Gamut, Neo, Color Ink, Ink. Wide gamut profiles and Neo warm mode added; Lighten and Vibrance removed.",
   "homepage": "https://github.com/issamassi0-droid/omarchy-ink-mode",
   "kinds": [
     "service",

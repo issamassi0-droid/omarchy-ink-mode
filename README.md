@@ -1,6 +1,6 @@
 折腾过彩色电子墨水屏以后，爱不释手。尤其是那种柔和而有层次感的调色，很想给你的阅读和编码桌面也弄一个：不是别的，而是一个整体屏幕的柔光滤镜。
 
-**P3** 是 DCI-P3 宽色域柔和色彩，接近印刷品感。**sRGB** 是标准 BT.709 忠实还原，饱和度克制。**Wide Gamut** 宽广色域，微暖脱色，适合长时间阅读。**Neo16** 偏暖的宽色域，更低对比度，深夜友好。**Color Ink** 保留色相但对纯度做了克制，像印刷品那样。**Ink** 更进一步，呈现暖灰色调，如报纸印品。**Normal** 即为“完全放开”的日常状态。
+**P3** 是 DCI-P3 宽色域柔和色彩，接近印刷品感。**sRGB** 是标准 BT.709 忠实还原，饱和度克制。**Wide Gamut** 宽广色域，微暖脱色，适合长时间阅读。**Neo** 偏暖的宽色域，更低对比度，深夜友好。**Color Ink** 保留色相但对纯度做了克制，像印刷品那样。**Ink** 更进一步，呈现暖灰色调，如报纸印品。**Normal** 即为“完全放开”的日常状态。
 
 这是一种 Omarchy bar widget 和服务。登录后和更换主题时会恢复上一次的模式。
 
@@ -10,7 +10,7 @@
 | **P3** | DCI-P3 宽色域，印刷感色彩 |
 | **sRGB** | 标准 BT.709 忠实还原 |
 | **Wide Gamut** | 宽广色域，微暖脱色 |
-| **Neo16** | 偏暖宽色域，低对比度 |
+| **Neo** | 偏暖宽色域，低对比度 |
 | **Color Ink** | 柔和的色相，纯度克制（类似印刷） |
 | **Ink** | 暖灰色调，如报纸印品 |
 
@@ -20,7 +20,7 @@
 omarchy plugin add https://github.com/issamassi0-droid/omarchy-ink-mode.git --enable
 ```
 
-这会在右侧栏嵌入一个小按钮。点击它，会按照 **Normal → P3 → sRGB → Wide Gamut → Neo16 → Color Ink → Ink → Normal** 的顺序轮转。
+这会在右侧栏嵌入一个小按钮。点击它，会按照 **Normal → P3 → sRGB → Wide Gamut → Neo → Color Ink → Ink → Normal** 的顺序轮转。
 
 可选 Hyprland 绑定（添加到 `~/.config/hypr/bindings.lua`）：
 
@@ -46,7 +46,7 @@ omarchy plugin remove jinxnet.inkmode
 
 ```bash
 omarchy-shell inkMode status          # {"mode":"p3","desired":"p3"}
-omarchy-shell inkMode cycle           # 循环：Normal → P3 → sRGB → Wide Gamut → Neo16 → Color Ink → Ink → Normal
+omarchy-shell inkMode cycle           # 循环：Normal → P3 → sRGB → Wide Gamut → Neo → Color Ink → Ink → Normal
 omarchy-shell inkMode set p3
 omarchy-shell inkMode refresh
 ```

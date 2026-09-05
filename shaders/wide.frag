@@ -1,5 +1,5 @@
-// Wide Gamut Mode: cool-muted, with updated warmth and gamma.
-// Warmth 0.02, saturation 0.94, gamma 1.25, blue reduction 2%.
+// Wide Gamut Mode: cool-muted, with updated parameters.
+// Warmth 0.02, saturation 0.94, gamma 1.35, blue reduction 9%.
 
 #version 300 es
 precision mediump float;
@@ -11,8 +11,8 @@ uniform sampler2D tex;
 const float WARMTH = 0.02;
 const float SATURATION = 0.94;
 const float CONTRAST = 0.88;
-const float GAMMA = 1.25;
-const float BLUE_REDUCE = 0.02;
+const float GAMMA = 1.35;
+const float BLUE_REDUCE = 0.09;
 const vec3 LUMA = vec3(0.2126, 0.7152, 0.0722);
 
 float srgbToLinear(float c) {
@@ -43,7 +43,7 @@ void main() {
     g2 = (g2 - 0.5) * CONTRAST + 0.5;
     b2 = (b2 - 0.5) * CONTRAST + 0.5;
 
-    // Gamma: 1.25 darkens midtones moderately
+    // Gamma: 1.35 darkens midtones moderately
     r2 = linearToSrgb(pow(clamp(r2, 0.0, 1.0), GAMMA));
     g2 = linearToSrgb(pow(clamp(g2, 0.0, 1.0), GAMMA));
     b2 = linearToSrgb(pow(clamp(b2, 0.0, 1.0), GAMMA));

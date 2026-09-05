@@ -1,5 +1,5 @@
 // P3 Mode: warm vivid shift, with updated parameters.
-// Warmth 0.03, saturation 1.01, gamma 1.15, blue reduction 2%.
+// Warmth 0.03, saturation 1.01, gamma 1.15, blue reduction 5%.
 
 #version 300 es
 precision mediump float;
@@ -12,7 +12,7 @@ const float WARMTH = 0.03;
 const float SATURATION = 1.01;
 const float CONTRAST = 0.98;
 const float GAMMA = 1.15;
-const float BLUE_REDUCE = 0.02;
+const float BLUE_REDUCE = 0.05;
 const vec3 LUMA = vec3(0.2126, 0.7152, 0.0722);
 
 float srgbToLinear(float c) {

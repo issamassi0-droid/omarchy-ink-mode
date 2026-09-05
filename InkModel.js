@@ -28,7 +28,7 @@ function label(mode) {
   if (mode === "p3") return "P3"
   if (mode === "srgb") return "sRGB"
   if (mode === "wide") return "Wide Gamut"
-  if (mode === "neo16") return "Neo16"
+  if (mode === "neo16") return "Neo"
   if (mode === "color-ink") return "Color Ink"
   if (mode === "ink") return "Ink"
   return "Normal"

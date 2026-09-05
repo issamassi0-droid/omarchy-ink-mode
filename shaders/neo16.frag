@@ -1,5 +1,5 @@
-// Neo16 Mode: warm soft night mode, with updated parameters.
-// Warmth 0.05, saturation 0.90, gamma 1.25, blue reduction 2%.
+// Neo Mode: warm soft night mode, with updated parameters.
+// Warmth 0.05, saturation 0.92, gamma 1.25, blue reduction 12%.
 
 #version 300 es
 precision mediump float;
@@ -9,10 +9,10 @@ layout(location = 0) out vec4 fragColor;
 uniform sampler2D tex;
 
 const float WARMTH = 0.05;
-const float SATURATION = 0.90;
+const float SATURATION = 0.92;
 const float CONTRAST = 0.85;
 const float GAMMA = 1.25;
-const float BLUE_REDUCE = 0.02;
+const float BLUE_REDUCE = 0.12;
 const vec3 LUMA = vec3(0.2126, 0.7152, 0.0722);
 
 float srgbToLinear(float c) {
