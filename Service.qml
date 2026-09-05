@@ -88,9 +88,6 @@ Item {
       return
     }
 
-    // A keybind that calls cycle.sh updates the compositor and the state
-    // file without going through this service. Re-read the file before
-    // treating the mismatch as a Hyprland reload that should be reverted.
     if (diskProbe.running)
       return
     diskProbe.pendingLive = live
@@ -104,7 +101,7 @@ Item {
       waitForEnd: true
       onStreamFinished: {
         var raw = String(text).trim()
-        if (raw !== "normal" && raw !== "color-ink" && raw !== "ink" && raw !== "lighten" && raw !== "vibrance")
+        if (raw !== "normal" && raw !== "color-ink" && raw !== "ink" && raw !== "p3" && raw !== "srgb" && raw !== "wide" && raw !== "neo16")
           return
         var saved = InkModel.normalize(raw)
         root.desiredMode = saved
@@ -138,7 +135,7 @@ Item {
       waitForEnd: true
       onStreamFinished: {
         var raw = String(text).trim()
-        if (raw !== "normal" && raw !== "color-ink" && raw !== "ink" && raw !== "lighten" && raw !== "vibrance")
+        if (raw !== "normal" && raw !== "color-ink" && raw !== "ink" && raw !== "p3" && raw !== "srgb" && raw !== "wide" && raw !== "neo16")
           return
         var saved = InkModel.normalize(raw)
         var live = InkModel.normalize(diskProbe.pendingLive)
@@ -152,8 +149,6 @@ Item {
           root.setMode(saved, true)
           return
         }
-        // Hyprland reload (theme change, omarchy update) clears the shader.
-        // Wait until it stays cleared before putting the filter back.
         settleTimer.restart()
       }
     }
@@ -227,8 +222,6 @@ Item {
     onTriggered: root.loadDesired()
   }
 
-  // ensureService injects `manifest` after createObject. Wait one tick so
-  // pluginDir is the real plugin path before the first desired-state probe.
   Timer {
     interval: 0
     running: true

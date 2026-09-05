@@ -1,12 +1,14 @@
 #!/bin/bash
-# Cycle compositor ink modes: Normal → Lighten → Color Ink → Ink → Normal.
+# Cycle compositor ink modes: Normal → P3 → sRGB → Wide Gamut → Neo16 → Color Ink → Ink → Normal.
 set -euo pipefail
 
 dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+srgb="$dir/shaders/srgb.frag"
+p3="$dir/shaders/p3.frag"
+wide="$dir/shaders/wide.frag"
+neo16="$dir/shaders/neo16.frag"
 color_ink="$dir/shaders/color-ink.frag"
-lighten="$dir/shaders/lighten.frag"
 ink="$dir/shaders/ink.frag"
-vibrance="$dir/shaders/vibrance.frag"
 state_dir="${XDG_STATE_HOME:-$HOME/.local/state}/omarchy"
 state_file="$state_dir/inkMode"
 
@@ -18,13 +20,15 @@ mode_from_hypr() {
   local json="$1"
   if printf '%s' "$json" | grep -q 'color-ink.frag'; then
     printf 'color-ink'
-  elif printf '%s' "$json" | grep -q 'vibrance.frag'; then
-    printf 'vibrance'
-  elif printf '%s' "$json" | grep -q 'lighten.frag'; then
-    printf 'lighten'
-  elif printf '%s' "$json" | grep -q '/ink.frag'; then
-    printf 'ink'
-  elif printf '%s' "$json" | grep -q 'ink.frag'; then
+  elif printf '%s' "$json" | grep -q 'neo16.frag'; then
+    printf 'neo16'
+  elif printf '%s' "$json" | grep -q 'wide.frag'; then
+    printf 'wide'
+  elif printf '%s' "$json" | grep -q 'srgb.frag'; then
+    printf 'srgb'
+  elif printf '%s' "$json" | grep -q 'p3.frag'; then
+    printf 'p3'
+  elif printf '%s' "$json" | grep -q '/ink.frag' || printf '%s' "$json" | grep -q 'ink.frag'; then
     printf 'ink'
   else
     printf 'normal'
@@ -36,7 +40,7 @@ read_desired() {
     local saved
     saved=$(tr -d '[:space:]' <"$state_file")
     case "$saved" in
-      normal|color-ink|ink|lighten|vibrance) printf '%s' "$saved" ;;
+      normal|color-ink|ink|p3|srgb|wide|neo16) printf '%s' "$saved" ;;
       *) printf 'normal' ;;
     esac
   else
@@ -51,7 +55,6 @@ write_desired() {
 
 set_shader() {
   hyprctl eval "hl.config({ [\"decoration.screen_shader\"] = \"$1\" })" >/dev/null
-  # Shader changes can sit unseen until the next damaged frame (e.g. mouse move).
   hyprctl eval "hl.dsp.force_renderer_reload()" >/dev/null 2>&1 || true
 }
 
@@ -72,20 +75,30 @@ set -- "${args[@]+"${args[@]}"}"
 
 apply() {
   case "$1" in
-    vibrance)
-      set_shader "$vibrance"
-      write_desired vibrance
-      [[ $quiet == true ]] || notify "Vibrance" "Lifted color, reduced gamma"
+    p3)
+      set_shader "$p3"
+      write_desired p3
+      [[ $quiet == true ]] || notify "P3" "DCI-P3 wide gamut, print-like color"
+      ;;
+    srgb)
+      set_shader "$srgb"
+      write_desired srgb
+      [[ $quiet == true ]] || notify "sRGB" "Standard BT.709 faithful color"
+      ;;
+    wide)
+      set_shader "$wide"
+      write_desired wide
+      [[ $quiet == true ]] || notify "Wide Gamut" "Adobe-like wide gamut, warm desaturation"
+      ;;
+    neo16)
+      set_shader "$neo16"
+      write_desired neo16
+      [[ $quiet == true ]] || notify "Neo16" "Warm-shifted wide gamut, softer contrast"
       ;;
     color-ink)
       set_shader "$color_ink"
       write_desired color-ink
       [[ $quiet == true ]] || notify "Color Ink" "Soft, print-like color"
-      ;;
-    lighten)
-      set_shader "$lighten"
-      write_desired lighten
-      [[ $quiet == true ]] || notify "Lighten" "Subtly muted color"
       ;;
     ink)
       set_shader "$ink"
@@ -102,9 +115,11 @@ apply() {
 
 next_mode() {
   case "$1" in
-    normal) printf 'lighten' ;;
-    lighten) printf 'vibrance' ;;
-    vibrance) printf 'color-ink' ;;
+    normal) printf 'p3' ;;
+    p3) printf 'srgb' ;;
+    srgb) printf 'wide' ;;
+    wide) printf 'neo16' ;;
+    neo16) printf 'color-ink' ;;
     color-ink) printf 'ink' ;;
     *) printf 'normal' ;;
   esac
@@ -124,14 +139,14 @@ case "$cmd" in
   restore)
     apply "$desired"
     ;;
-  normal|lighten|vibrance|color-ink|ink)
+  normal|p3|srgb|wide|neo16|color-ink|ink)
     apply "$cmd"
     ;;
   cycle)
     apply "$(next_mode "$desired")"
     ;;
   *)
-    echo "Usage: cycle.sh [cycle|status|desired|restore|normal|lighten|vibrance|color-ink|ink] [--quiet]" >&2
+    echo "Usage: cycle.sh [cycle|status|desired|restore|normal|p3|srgb|wide|neo16|color-ink|ink] [--quiet]" >&2
     exit 1
     ;;
 esac

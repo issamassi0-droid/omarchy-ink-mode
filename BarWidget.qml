@@ -21,7 +21,7 @@ BarWidget {
   readonly property string mode: service ? InkModel.normalize(service.mode) : fallbackMode
 
   readonly property color penColor: {
-    if (mode === "color-ink")
+    if (mode === "color-ink" || mode === "ink")
       return Color.urgent
     if (mode === "normal")
       return Qt.darker(bar && bar.barForeground ? bar.barForeground : Color.foreground, 1.35)

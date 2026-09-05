@@ -2,11 +2,11 @@
   "schemaVersion": 1,
   "id": "jinxnet.inkmode",
   "name": "Ink Mode",
-  "version": "1.3.0",
-  "author": "Brad Jinks",
+  "version": "2.0.0",
+  "author": "Brad Jinks / issamassi0-droid",
   "license": "MIT",
-  "description": "A print-like filter for the whole screen — good for books and graphic novels, long coding sessions, and night-time viewing. Color Ink keeps hue without the glow; Ink is warm grayscale. Last mode comes back after login and Style changes.",
-  "homepage": "https://github.com/bradjinks/omarchy-ink-mode",
+  "description": "Print-like screen filter with 7 modes: Normal, P3, sRGB, Wide Gamut, Neo16, Color Ink, Ink. Wide gamut profiles and Neo16 warm mode added; Lighten and Vibrance removed.",
+  "homepage": "https://github.com/issamassi0-droid/omarchy-ink-mode",
   "kinds": [
     "service",
     "bar-widget"
