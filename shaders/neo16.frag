@@ -1,4 +1,4 @@
-// Neo16 Mode: warm soft night mode. No gamma — like Color Ink.
+// Neo16 Mode: warm soft night mode, blue reduced in sRGB space for clean whites.
 // Warmest + most muted + lowest contrast.
 
 #version 300 es
@@ -42,11 +42,11 @@ void main() {
     g2 = (g2 - 0.5) * CONTRAST + 0.5;
     b2 = (b2 - 0.5) * CONTRAST + 0.5;
 
-    b2 *= (1.0 - BLUE_REDUCE);
-
     r2 = linearToSrgb(r2);
     g2 = linearToSrgb(g2);
     b2 = linearToSrgb(b2);
+
+    b2 *= (1.0 - BLUE_REDUCE);
 
     fragColor = vec4(r2, g2, b2, pix.a);
 }

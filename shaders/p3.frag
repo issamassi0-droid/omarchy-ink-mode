@@ -1,4 +1,4 @@
-// P3 Mode: warm vivid shift, blue reduced for comfort.
+// P3 Mode: warm vivid shift, blue reduced in sRGB space for clean whites.
 
 #version 300 es
 precision mediump float;
@@ -10,7 +10,6 @@ uniform sampler2D tex;
 const float WARMTH = 0.03;
 const float SATURATION = 1.06;
 const float CONTRAST = 0.98;
-const float GAMMA = 1.00;
 const float BLUE_REDUCE = 0.04;
 const vec3 LUMA = vec3(0.2126, 0.7152, 0.0722);
 
@@ -42,11 +41,11 @@ void main() {
     g2 = (g2 - 0.5) * CONTRAST + 0.5;
     b2 = (b2 - 0.5) * CONTRAST + 0.5;
 
-    b2 *= (1.0 - BLUE_REDUCE);
+    r2 = linearToSrgb(r2);
+    g2 = linearToSrgb(g2);
+    b2 = linearToSrgb(b2);
 
-    r2 = linearToSrgb(pow(clamp(r2, 0.0, 1.0), GAMMA));
-    g2 = linearToSrgb(pow(clamp(g2, 0.0, 1.0), GAMMA));
-    b2 = linearToSrgb(pow(clamp(b2, 0.0, 1.0), GAMMA));
+    b2 *= (1.0 - BLUE_REDUCE);
 
     fragColor = vec4(r2, g2, b2, pix.a);
 }
