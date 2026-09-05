@@ -1,6 +1,6 @@
 // Neo16 Mode: warm-shifted wide gamut, soft and easy on the eyes.
-// Stronger warmth (w=0.04), gentle desaturation (0.95), lower contrast,
-// slightly brighter gamma for late-night comfort.
+// Strong warmth 0.05, gentle desaturation 0.92, low contrast 0.94,
+// brighter gamma 1.04 for late-night comfort.
 
 #version 300 es
 precision mediump float;
@@ -9,9 +9,9 @@ in vec2 v_texcoord;
 layout(location = 0) out vec4 fragColor;
 uniform sampler2D tex;
 
-const float WARMTH = 0.04;
-const float SATURATION = 0.95;
-const float CONTRAST = 0.97;
+const float WARMTH = 0.05;
+const float SATURATION = 0.92;
+const float CONTRAST = 0.94;
 const float GAMMA = 1.04;
 const vec3 LUMA = vec3(0.2126, 0.7152, 0.0722);
 

@@ -1,5 +1,5 @@
-// sRGB Mode: faithful BT.709 reproduction, nearly passthrough.
-// Just a gentle gamma/contrast tweak for visual softness.
+// sRGB Mode: faithful BT.709 reproduction, softer pass-through.
+// Warmth 0.00, slight desaturation, soft contrast, brighter gamma.
 
 #version 300 es
 precision mediump float;
@@ -9,9 +9,9 @@ layout(location = 0) out vec4 fragColor;
 uniform sampler2D tex;
 
 const float WARMTH = 0.0;
-const float SATURATION = 1.0;
-const float CONTRAST = 1.0;
-const float GAMMA = 0.99;
+const float SATURATION = 0.98;
+const float CONTRAST = 0.97;
+const float GAMMA = 1.01;
 const vec3 LUMA = vec3(0.2126, 0.7152, 0.0722);
 
 float srgbToLinear(float c) {

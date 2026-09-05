@@ -1,5 +1,5 @@
 // P3 Mode: subtle DCI-P3 warmth shift.
-// Gentle warmth (w=0.02), slight saturation boost, soft contrast.
+// Warmth 0.025, slight desaturation, soft contrast, brighter gamma.
 
 #version 300 es
 precision mediump float;
@@ -8,10 +8,10 @@ in vec2 v_texcoord;
 layout(location = 0) out vec4 fragColor;
 uniform sampler2D tex;
 
-const float WARMTH = 0.02;
-const float SATURATION = 1.02;
-const float CONTRAST = 0.99;
-const float GAMMA = 1.01;
+const float WARMTH = 0.025;
+const float SATURATION = 0.98;
+const float CONTRAST = 0.97;
+const float GAMMA = 1.02;
 const vec3 LUMA = vec3(0.2126, 0.7152, 0.0722);
 
 float srgbToLinear(float c) {
@@ -29,23 +29,19 @@ void main() {
     float g = srgbToLinear(pix.g);
     float b = srgbToLinear(pix.b);
 
-    // Warmth: shift R up, B down (preserves white)
     float r2 = r + WARMTH * (r - b);
     float b2 = b + WARMTH * (b - r);
     float g2 = g;
 
-    // Saturation
     float y = 0.2126 * r2 + 0.7152 * g2 + 0.0722 * b2;
     r2 = mix(y, r2, SATURATION);
     g2 = mix(y, g2, SATURATION);
     b2 = mix(y, b2, SATURATION);
 
-    // Contrast
     r2 = (r2 - 0.5) * CONTRAST + 0.5;
     g2 = (g2 - 0.5) * CONTRAST + 0.5;
     b2 = (b2 - 0.5) * CONTRAST + 0.5;
 
-    // Gamma + back to sRGB
     r2 = linearToSrgb(pow(clamp(r2, 0.0, 1.0), vec3(GAMMA)).r);
     g2 = linearToSrgb(pow(clamp(g2, 0.0, 1.0), vec3(GAMMA)).r);
     b2 = linearToSrgb(pow(clamp(b2, 0.0, 1.0), vec3(GAMMA)).r);
