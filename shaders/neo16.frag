@@ -43,9 +43,9 @@ void main() {
     g2 = (g2 - 0.5) * CONTRAST + 0.5;
     b2 = (b2 - 0.5) * CONTRAST + 0.5;
 
-    r2 = linearToSrgb(pow(clamp(r2, 0.0, 1.0), vec3(GAMMA)).r);
-    g2 = linearToSrgb(pow(clamp(g2, 0.0, 1.0), vec3(GAMMA)).r);
-    b2 = linearToSrgb(pow(clamp(b2, 0.0, 1.0), vec3(GAMMA)).r);
+    r2 = linearToSrgb(clamp(r2, 0.0, 1.0));
+    g2 = linearToSrgb(clamp(g2, 0.0, 1.0));
+    b2 = linearToSrgb(clamp(b2, 0.0, 1.0));
 
     fragColor = vec4(r2, g2, b2, pix.a);
 }
