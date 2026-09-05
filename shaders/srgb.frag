@@ -1,5 +1,5 @@
-// sRGB Mode: neutral soft, with increased gamma.
-// Gamma 1.25 brightens midtones moderately, saturation 0.99.
+// sRGB Mode: neutral soft, with increased warmth and gamma.
+// Warmth 0.02, saturation 0.97, gamma 1.35, blue reduction 3%.
 
 #version 300 es
 precision mediump float;
@@ -8,11 +8,11 @@ in vec2 v_texcoord;
 layout(location = 0) out vec4 fragColor;
 uniform sampler2D tex;
 
-const float WARMTH = 0.0;
-const float SATURATION = 0.99;
+const float WARMTH = 0.02;
+const float SATURATION = 0.97;
 const float CONTRAST = 0.92;
-const float GAMMA = 1.25;
-const float BLUE_REDUCE = 0.05;
+const float GAMMA = 1.35;
+const float BLUE_REDUCE = 0.03;
 const vec3 LUMA = vec3(0.2126, 0.7152, 0.0722);
 
 float srgbToLinear(float c) {
@@ -43,7 +43,7 @@ void main() {
     g2 = (g2 - 0.5) * CONTRAST + 0.5;
     b2 = (b2 - 0.5) * CONTRAST + 0.5;
 
-    // Gamma: 1.25 brightens midtones moderately
+    // Gamma: 1.35 brightens midtones
     r2 = linearToSrgb(pow(clamp(r2, 0.0, 1.0), GAMMA));
     g2 = linearToSrgb(pow(clamp(g2, 0.0, 1.0), GAMMA));
     b2 = linearToSrgb(pow(clamp(b2, 0.0, 1.0), GAMMA));
